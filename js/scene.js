@@ -1,358 +1,337 @@
 /* ============================================================================
-   NATURE CARE — HOLOGRAPHIC SOLAR FENCE (Three.js)  v8
-   A real 3D CGI model of a Nature Care solar electric fence — posts, seven
-   high-tensile wires with sag, insulators, a solar panel + energizer +
-   battery unit, a warning board — rendered as a glowing holographic
-   wireframe over a dotted perspective grid, with energy pulses racing along
-   the wires and light streaming from the sun into the panel. Bloom post-fx.
-   The camera flies between scenes as you scroll (GSAP ScrollTrigger scrub).
+   NATURE CARE — HERO FENCE (Three.js)  v9
+   A solid, sunlit model of a Nature Care solar fence — steel posts on concrete
+   footings, seven high-tensile wires with sag, insulators, a solar mast with
+   PV module, energizer and battery, and a warning board — standing on a strip
+   of grass in front of the landscape photograph behind the canvas. Light
+   pulses travel along the wires as the "energized" metaphor.
+   The canvas is transparent: the photo, the CSS sun bloom and the gradient
+   shade are plain HTML layers, so the page still looks right if this module
+   never runs (the SVG fence in .stage stays visible).
+   The camera moves between shots as the home story scrolls (main.js calls
+   window.NC_setProgress). Rendering stops when the story is off screen.
+   Loaded only by js/scene-boot.js, after a capability check.
    ============================================================================ */
 import * as THREE from 'three';
-import { EffectComposer } from '../vendor/three/postprocessing/EffectComposer.js';
-import { RenderPass } from '../vendor/three/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from '../vendor/three/postprocessing/UnrealBloomPass.js';
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isMobile = window.innerWidth < 760;
 const canvas = document.getElementById('scene');
-if (!canvas) throw new Error('#scene canvas missing');
-
-/* ------------------------------------------------------------ palette */
-const C = {
-    bg: 0x040609,
-    holo: 0x3AF2BC,        // teal-green hologram (nature + energy)
-    holoDim: 0x1B7F68,
-    grid: 0x2A4A5A,
-    gold: 0xFFC53D,        // solar
-    goldSoft: 0xFFE28A,
-    white: 0xEAFBF4,
-    cyan: 0x5FD7FF
-};
+const story = document.querySelector('.story');
+if (!canvas || !story) throw new Error('scene: canvas or story missing');
 
 /* ------------------------------------------------------------ renderer */
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.6));
-renderer.setSize(window.innerWidth, window.innerHeight, false);
-renderer.setClearColor(C.bg, 1);
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, alpha: true, powerPreference: isMobile ? 'low-power' : 'high-performance' });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.75));
+renderer.setClearColor(0x000000, 0);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.15;
+renderer.toneMappingExposure = 1.05;
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(C.bg, isMobile ? 0.055 : 0.042);
+const FOG = new THREE.Color(0x8c8466);           // warm haze sampled from the photo's horizon
+scene.fog = new THREE.Fog(FOG, 18, isMobile ? 70 : 95);
 
-const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.position.set(-6, 3.2, 12);
+const camera = new THREE.PerspectiveCamera(isMobile ? 52 : 40, 1, 0.05, 220);
+
+/* ------------------------------------------------------------ light: low golden-hour sun from back right */
+scene.add(new THREE.HemisphereLight(0xffe7c2, 0x1f2c19, 0.9));
+const sunLight = new THREE.DirectionalLight(0xffc98a, 2.1);
+sunLight.position.set(-14, 9, -18);
+scene.add(sunLight);
+const fill = new THREE.DirectionalLight(0x9fc4ff, 0.35);
+fill.position.set(10, 4, 12);
+scene.add(fill);
 
 /* ------------------------------------------------------------ helpers */
-const holoLine = new THREE.LineBasicMaterial({ color: C.holo, transparent: true, opacity: 0.85 });
-const holoLineDim = new THREE.LineBasicMaterial({ color: C.holoDim, transparent: true, opacity: 0.55 });
-const goldLine = new THREE.LineBasicMaterial({ color: C.gold, transparent: true, opacity: 0.9 });
-const cyanLine = new THREE.LineBasicMaterial({ color: C.cyan, transparent: true, opacity: 0.75 });
-
-function edges(geo, mat, thresh = 20) {
-    return new THREE.LineSegments(new THREE.EdgesGeometry(geo, thresh), mat);
+function canvasTex(w, h, draw) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    draw(c.getContext('2d'), w, h);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+    return t;
 }
-function vertexDots(geo, color, size = 0.06, opacity = 0.9) {
-    const pts = new THREE.Points(geo, new THREE.PointsMaterial({ color, size, transparent: true, opacity, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-    return pts;
-}
-function makeGlowSprite(color, size, opacity = 1) {
-    const cvs = document.createElement('canvas'); cvs.width = cvs.height = 64;
-    const g = cvs.getContext('2d');
+const glowTex = canvasTex(64, 64, (g) => {
     const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-    grad.addColorStop(0, 'rgba(255,255,255,1)');
-    grad.addColorStop(0.25, 'rgba(255,255,255,0.55)');
-    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    grad.addColorStop(0, 'rgba(255,255,255,1)'); grad.addColorStop(0.22, 'rgba(255,255,255,0.6)'); grad.addColorStop(1, 'rgba(255,255,255,0)');
     g.fillStyle = grad; g.fillRect(0, 0, 64, 64);
-    const tex = new THREE.CanvasTexture(cvs);
-    const mat = new THREE.SpriteMaterial({ map: tex, color, transparent: true, opacity, blending: THREE.AdditiveBlending, depthWrite: false });
-    const s = new THREE.Sprite(mat); s.scale.set(size, size, 1);
-    return s;
+});
+function glow(color, size, opacity = 1) {
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color, transparent: true, opacity, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+    s.scale.set(size, size, 1); return s;
 }
+let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 
-/* ------------------------------------------------------------ world root */
-const world = new THREE.Group();
-scene.add(world);
+/* ------------------------------------------------------------ the line */
+const FENCE = { spacing: 3.2, count: isMobile ? 22 : 34, first: 7.2, height: 2.2, wires: 7 };
+const postX = []; for (let i = 0; i < FENCE.count; i++) postX.push(FENCE.first - i * FENCE.spacing);
+const wireY = (w) => 0.32 + w * ((FENCE.height - 0.42) / (FENCE.wires - 1));
+const groundY = (x, z) => 0.05 * Math.sin(x * 0.11) + 0.04 * Math.sin(z * 0.6 + x * 0.05);
 
-/* ---------- dotted perspective grid floor ---------- */
-(function buildGrid() {
-    const N = isMobile ? 26 : 40, step = 1.0;
-    const pos = [];
-    for (let i = -N; i <= N; i++) for (let j = -N; j <= N; j++) pos.push(i * step, 0, j * step);
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    const m = new THREE.PointsMaterial({ color: C.grid, size: 0.045, transparent: true, opacity: 0.85, sizeAttenuation: true, depthWrite: false });
-    const p = new THREE.Points(g, m); p.position.y = -0.02;
-    world.add(p);
-    // faint grid lines every 5 units
-    const lp = [];
-    for (let i = -N; i <= N; i += 5) { lp.push(i, 0, -N, i, 0, N); lp.push(-N, 0, i, N, 0, i); }
-    const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.Float32BufferAttribute(lp, 3));
-    world.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: C.grid, transparent: true, opacity: 0.18 })));
+const steel = new THREE.MeshStandardMaterial({ color: 0x2d332f, metalness: 0.65, roughness: 0.42 });
+const concrete = new THREE.MeshStandardMaterial({ color: 0x9a978d, roughness: 0.95 });
+const blackPoly = new THREE.MeshStandardMaterial({ color: 0x111312, roughness: 0.55 });
+const wireMat = new THREE.MeshStandardMaterial({ color: 0xd9dfdb, metalness: 0.9, roughness: 0.28 });
+
+(function buildPosts() {
+    const n = postX.length;
+    const postGeo = new THREE.CylinderGeometry(0.055, 0.065, FENCE.height + 0.15, 10);
+    const footGeo = new THREE.CylinderGeometry(0.17, 0.22, 0.32, 12);
+    const insGeo = new THREE.CylinderGeometry(0.045, 0.045, 0.11, 10); insGeo.rotateX(Math.PI / 2);
+    const capGeo = new THREE.CylinderGeometry(0.07, 0.06, 0.05, 10);
+    const posts = new THREE.InstancedMesh(postGeo, steel, n);
+    const feet = new THREE.InstancedMesh(footGeo, concrete, n);
+    const caps = new THREE.InstancedMesh(capGeo, blackPoly, n);
+    const ins = new THREE.InstancedMesh(insGeo, blackPoly, n * FENCE.wires);
+    const m = new THREE.Matrix4();
+    postX.forEach((x, i) => {
+        const gy = groundY(x, 0);
+        m.makeTranslation(x, gy + (FENCE.height + 0.15) / 2, 0); posts.setMatrixAt(i, m);
+        m.makeTranslation(x, gy + 0.1, 0); feet.setMatrixAt(i, m);
+        m.makeTranslation(x, gy + FENCE.height + 0.17, 0); caps.setMatrixAt(i, m);
+        for (let w = 0; w < FENCE.wires; w++) { m.makeTranslation(x, gy + wireY(w), 0.07); ins.setMatrixAt(i * FENCE.wires + w, m); }
+    });
+    scene.add(posts, feet, caps, ins);
 })();
 
-/* ---------- the fence: posts + 7 wires with sag + insulators ---------- */
-const FENCE = { posts: isMobile ? 9 : 13, spacing: 3.0, height: 2.4, wires: 7 };
-const fence = new THREE.Group();
-world.add(fence);
-const wirePaths = [];      // per wire: array of THREE.Vector3 sample points (for pulses)
-const postX = [];
-(function buildFence() {
-    const first = -((FENCE.posts - 1) * FENCE.spacing) / 2;
-    const postGeo = new THREE.BoxGeometry(0.09, FENCE.height, 0.09);
-    const insGeo = new THREE.TorusGeometry(0.06, 0.018, 6, 12);
-    for (let i = 0; i < FENCE.posts; i++) {
-        const x = first + i * FENCE.spacing; postX.push(x);
-        const post = edges(postGeo, holoLine); post.position.set(x, FENCE.height / 2, 0); fence.add(post);
-        // base plate
-        const base = edges(new THREE.BoxGeometry(0.34, 0.04, 0.34), holoLineDim); base.position.set(x, 0.02, 0); fence.add(base);
-        // insulators
-        for (let w = 0; w < FENCE.wires; w++) {
-            const y = 0.30 + w * ((FENCE.height - 0.30) / (FENCE.wires - 0.5));
-            const ins = edges(insGeo, goldLine, 30); ins.rotation.y = Math.PI / 2; ins.position.set(x, y, 0.06); fence.add(ins);
-        }
-    }
-    // wires with catenary sag between posts
+const wirePaths = [];
+(function buildWires() {
     for (let w = 0; w < FENCE.wires; w++) {
-        const y = 0.30 + w * ((FENCE.height - 0.30) / (FENCE.wires - 0.5));
         const pts = [];
-        for (let i = 0; i < FENCE.posts - 1; i++) {
+        for (let i = 0; i < postX.length - 1; i++) {
             const x0 = postX[i], x1 = postX[i + 1];
-            for (let s = 0; s <= 10; s++) {
-                const t = s / 10;
-                const sag = Math.sin(t * Math.PI) * 0.045;
-                pts.push(new THREE.Vector3(x0 + (x1 - x0) * t, y - sag, 0.06));
+            for (let s = 0; s < 8; s++) {
+                const t = s / 8, x = x0 + (x1 - x0) * t;
+                pts.push(new THREE.Vector3(x, groundY(x, 0) + wireY(w) - Math.sin(t * Math.PI) * 0.035, 0.1));
             }
         }
+        const last = postX[postX.length - 1]; pts.push(new THREE.Vector3(last, groundY(last, 0) + wireY(w), 0.1));
         wirePaths.push(pts);
-        const g = new THREE.BufferGeometry().setFromPoints(pts);
-        fence.add(new THREE.Line(g, new THREE.LineBasicMaterial({ color: C.holo, transparent: true, opacity: 0.55 })));
-        // dotted highlight along wire (the reference's particle look)
-        fence.add(vertexDots(g, C.holo, 0.035, 0.7));
+        const curve = new THREE.CatmullRomCurve3(pts);
+        scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, pts.length * 2, isMobile ? 0.011 : 0.008, 5, false), wireMat));
     }
 })();
 
-/* ---------- solar unit on one post: panel + energizer + battery ---------- */
-const solarUnit = new THREE.Group();
-const unitPostIndex = Math.floor(FENCE.posts * 0.62);
-solarUnit.position.set(postX[unitPostIndex], 0, 0);
-fence.add(solarUnit);
-let panelWorldPos = new THREE.Vector3(), energizerWorldPos = new THREE.Vector3(), boardWorldPos = new THREE.Vector3();
-(function buildSolar() {
-    // taller mast behind the post
-    const mast = edges(new THREE.CylinderGeometry(0.05, 0.06, 3.6, 8), holoLine); mast.position.set(0, 1.8, -0.5); solarUnit.add(mast);
-    // panel
-    const panel = new THREE.Group(); panel.position.set(0, 3.55, -0.5); panel.rotation.x = -0.55; solarUnit.add(panel);
-    panel.add(edges(new THREE.BoxGeometry(1.5, 0.05, 1.0), cyanLine));
-    // cell grid on panel face
-    const cells = [];
-    for (let i = 1; i < 6; i++) cells.push(-0.75 + i * 0.25, 0.03, -0.5, -0.75 + i * 0.25, 0.03, 0.5);
-    for (let j = 1; j < 4; j++) cells.push(-0.75, 0.03, -0.5 + j * 0.25, 0.75, 0.03, -0.5 + j * 0.25);
-    const cg = new THREE.BufferGeometry(); cg.setAttribute('position', new THREE.Float32BufferAttribute(cells, 3));
-    panel.add(new THREE.LineSegments(cg, new THREE.LineBasicMaterial({ color: C.cyan, transparent: true, opacity: 0.35 })));
-    // energizer box on the mast
-    const enr = edges(new THREE.BoxGeometry(0.42, 0.55, 0.22), goldLine); enr.position.set(0, 1.55, -0.5); solarUnit.add(enr);
-    // status LED
-    const led = makeGlowSprite(C.holo, 0.22); led.position.set(0.12, 1.72, -0.37); solarUnit.add(led); solarUnit.userData.led = led;
-    // battery box at base
-    const bat = edges(new THREE.BoxGeometry(0.6, 0.4, 0.4), holoLineDim); bat.position.set(0, 0.2, -0.85); solarUnit.add(bat);
-    // cables: panel→energizer→battery→top wire
-    const cab = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 3.35, -0.5), new THREE.Vector3(0.1, 2.4, -0.62), new THREE.Vector3(0, 1.85, -0.5)]);
-    solarUnit.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(cab.getPoints(24)), holoLineDim));
-    const cab2 = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 1.28, -0.5), new THREE.Vector3(0.05, 0.7, -0.75), new THREE.Vector3(0, 0.4, -0.85)]);
-    solarUnit.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(cab2.getPoints(24)), holoLineDim));
-    const topWireY = 0.30 + (FENCE.wires - 1) * ((FENCE.height - 0.30) / (FENCE.wires - 0.5));
-    const cab3 = new THREE.CatmullRomCurve3([new THREE.Vector3(0.21, 1.5, -0.5), new THREE.Vector3(0.35, 1.9, -0.2), new THREE.Vector3(0.05, topWireY, 0.06)]);
-    solarUnit.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(cab3.getPoints(24)), goldLine));
-    // warning board on the post
-    const board = edges(new THREE.BoxGeometry(0.5, 0.34, 0.03), goldLine); board.position.set(0.02, 1.35, 0.11); solarUnit.add(board);
-    const bolt = [0.03, 0.10, 0.03, -0.05, 0.02, 0.03, 0.06, 0.03, 0.03, -0.03, -0.10, 0.03];
-    const bg = new THREE.BufferGeometry(); bg.setAttribute('position', new THREE.Float32BufferAttribute(bolt, 3));
-    const boltLine = new THREE.Line(bg, goldLine); boltLine.position.set(0.02, 1.35, 0.115); solarUnit.add(boltLine);
-    solarUnit.userData.refs = { panel, enr, board };
+/* ------------------------------------------------------------ ground: grass strip + earth berm under the line */
+(function buildGround() {
+    const W = 150, D = 26, sx = 150, sz = 26;
+    const g = new THREE.PlaneGeometry(W, D, sx, sz); g.rotateX(-Math.PI / 2); g.translate(-W / 2 + 14, 0, 2);
+    const pos = g.attributes.position, col = new Float32Array(pos.count * 4);
+    const cA = new THREE.Color(0x24391c), cB = new THREE.Color(0x3d5424), cEarth = new THREE.Color(0x5b4630), c = new THREE.Color();
+    for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i), z = pos.getZ(i);
+        pos.setY(i, groundY(x, z) + (Math.abs(z) < 0.9 ? 0.06 * (1 - Math.abs(z) / 0.9) : 0));
+        c.copy(cA).lerp(cB, 0.5 + 0.5 * Math.sin(x * 0.7 + z * 1.3) * Math.cos(z * 0.4));
+        c.lerp(cEarth, Math.max(0, 1 - Math.abs(z) / 1.1) * 0.85);
+        const backFade = THREE.MathUtils.smoothstep(z, -9, -3);          // fade into the photo behind the line
+        const farFade = 1 - THREE.MathUtils.smoothstep(-x, 45, 110);      // and down the line
+        col[i * 4] = c.r; col[i * 4 + 1] = c.g; col[i * 4 + 2] = c.b; col[i * 4 + 3] = backFade * farFade;
+    }
+    g.setAttribute('color', new THREE.BufferAttribute(col, 4));
+    g.computeVertexNormals();
+    const mat = new THREE.MeshLambertMaterial({ vertexColors: true, transparent: true, depthWrite: false });
+    scene.add(new THREE.Mesh(g, mat));
+
+    // grass blades, instanced, densest along the line and in the foreground
+    const N = isMobile ? 1800 : 6000;
+    const blade = new THREE.ConeGeometry(0.012, 1, 3, 1, true); blade.translate(0, 0.5, 0);
+    const grass = new THREE.InstancedMesh(blade, new THREE.MeshLambertMaterial({ color: 0xffffff, side: THREE.DoubleSide }), N);
+    const m = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), s = new THREE.Vector3(), p = new THREE.Vector3(), gc = new THREE.Color();
+    for (let i = 0; i < N; i++) {
+        const x = 12 - Math.pow(rnd(), 1.6) * 80;
+        let z = (rnd() - 0.5) * 2;
+        z = z < 0 ? -Math.pow(-z, 0.8) * 3.5 : Math.pow(z, 0.8) * 2.6;   // keep blades off the camera lens
+        if (Math.abs(z) < 0.3) z += Math.sign(z || 1) * 0.3;
+        const h = 0.12 + rnd() * (Math.abs(z) < 1.2 ? 0.34 : 0.22);
+        e.set((rnd() - 0.5) * 0.5, rnd() * Math.PI, (rnd() - 0.5) * 0.5); q.setFromEuler(e);
+        p.set(x, groundY(x, z), z); s.set(1, h, 1);
+        m.compose(p, q, s); grass.setMatrixAt(i, m);
+        gc.setHSL(0.24 + rnd() * 0.05, 0.45 + rnd() * 0.2, 0.18 + rnd() * 0.16); grass.setColorAt(i, gc);
+    }
+    scene.add(grass);
 })();
 
-/* ---------- the sun (gold) + light stream to the panel ---------- */
-const sun = makeGlowSprite(C.gold, 4.2, 0.95); sun.position.set(9, 9.5, -12); world.add(sun);
-const sunHalo = makeGlowSprite(C.goldSoft, 12, 0.35); sunHalo.position.copy(sun.position); world.add(sunHalo);
-const sunCore = new THREE.Mesh(new THREE.SphereGeometry(0.75, 24, 16), new THREE.MeshBasicMaterial({ color: 0xFFF3C4 })); sunCore.position.copy(sun.position); world.add(sunCore);
-// photon stream: particles flowing from sun to panel
-const PHOTONS = isMobile ? 90 : 180;
-const photonGeo = new THREE.BufferGeometry();
-const photonPos = new Float32Array(PHOTONS * 3);
-const photonT = new Float32Array(PHOTONS);
-for (let i = 0; i < PHOTONS; i++) photonT[i] = Math.random();
-photonGeo.setAttribute('position', new THREE.BufferAttribute(photonPos, 3));
-const photons = new THREE.Points(photonGeo, new THREE.PointsMaterial({ color: C.goldSoft, size: 0.09, transparent: true, opacity: 0.85, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-world.add(photons);
+/* ------------------------------------------------------------ solar unit: mast, PV module, energizer, battery, board */
+const unitX = postX[2] - FENCE.spacing / 2;
+const unit = new THREE.Group(); unit.position.set(unitX, groundY(unitX, -0.6), -0.6); scene.add(unit);
+const refs = {};
+(function buildUnit() {
+    const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 3.5, 10), steel); mast.position.y = 1.75; unit.add(mast);
+    const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.25, 0.3, 12), concrete); foot.position.y = 0.1; unit.add(foot);
+    // PV module with a cell texture
+    const pvTex = canvasTex(256, 384, (g, w, h) => {
+        g.fillStyle = '#0d1c2e'; g.fillRect(0, 0, w, h);
+        const cw = w / 6, ch = h / 10;
+        for (let i = 0; i < 6; i++) for (let j = 0; j < 10; j++) {
+            const gr = g.createLinearGradient(i * cw, j * ch, (i + 1) * cw, (j + 1) * ch);
+            gr.addColorStop(0, '#1d3b5e'); gr.addColorStop(1, '#0f2340');
+            g.fillStyle = gr; g.fillRect(i * cw + 2, j * ch + 2, cw - 4, ch - 4);
+        }
+        g.strokeStyle = 'rgba(200,215,230,0.35)'; g.lineWidth = 1;
+        for (let i = 0; i <= 6; i++) { g.beginPath(); g.moveTo(i * cw, 0); g.lineTo(i * cw, h); g.stroke(); }
+    });
+    const panel = new THREE.Group(); panel.position.set(0, 3.55, 0); panel.rotation.order = 'YXZ'; panel.rotation.set(1.0, 0.9, 0); unit.add(panel);   // module tilted up, face turned toward the viewer
+    const frame = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.045, 1.6), new THREE.MeshStandardMaterial({ color: 0xc3c9cc, metalness: 0.35, roughness: 0.4 }));
+    panel.add(frame);
+    const face = new THREE.Mesh(new THREE.PlaneGeometry(1.04, 1.54), new THREE.MeshStandardMaterial({ map: pvTex, metalness: 0.1, roughness: 0.25, side: THREE.DoubleSide }));
+    face.rotation.x = -Math.PI / 2; face.position.y = 0.024; panel.add(face);
+    refs.panel = panel;
+    // energizer enclosure with the Nature Care mark
+    const box = new THREE.Group(); box.position.set(0.0, 1.55, 0.12); unit.add(box);
+    const shell = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.64, 0.22), new THREE.MeshStandardMaterial({ color: 0x1b201d, metalness: 0.3, roughness: 0.5 }));
+    box.add(shell);
+    const faceMat = new THREE.MeshStandardMaterial({ color: 0x151917, roughness: 0.45 });
+    const front = new THREE.Mesh(new THREE.PlaneGeometry(0.44, 0.58), faceMat); front.position.z = 0.111; box.add(front);
+    new THREE.TextureLoader().load('image/logo-light-mark.png', (t) => {
+        t.colorSpace = THREE.SRGBColorSpace;
+        const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.2), new THREE.MeshBasicMaterial({ map: t, transparent: true, toneMapped: false }));
+        logo.position.set(0, 0.11, 0.113); box.add(logo); requestRender();
+    });
+    const led = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.022, 0.01), new THREE.MeshBasicMaterial({ color: 0x9be04a, toneMapped: false })); led.position.set(0, -0.16, 0.115); box.add(led);
+    const ledGlow = glow(0x9be04a, 0.45, 0.9); ledGlow.position.set(0, -0.16, 0.14); box.add(ledGlow);
+    refs.energizer = box; refs.led = ledGlow; refs.ledBar = led;
+    // battery box at the foot
+    const bat = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.42, 0.42), new THREE.MeshStandardMaterial({ color: 0x232926, roughness: 0.7 })); bat.position.set(0.05, 0.36, -0.2); unit.add(bat);
+    // cables
+    const cable = (a, b, c) => unit.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([a, b, c]), 16, 0.012, 5), blackPoly));
+    cable(new THREE.Vector3(0.05, 3.3, 0.05), new THREE.Vector3(0.14, 2.5, 0.12), new THREE.Vector3(0.12, 1.86, 0.15));
+    cable(new THREE.Vector3(-0.12, 1.25, 0.12), new THREE.Vector3(-0.1, 0.8, 0.0), new THREE.Vector3(-0.1, 0.56, -0.15));
+    cable(new THREE.Vector3(0.2, 1.3, 0.15), new THREE.Vector3(0.6, 1.9, 0.5), new THREE.Vector3(1.4, wireY(FENCE.wires - 1), 0.68));
+    // warning board on the next post
+    const boardTex = canvasTex(256, 176, (g, w, h) => {
+        g.fillStyle = '#f2c230'; g.fillRect(0, 0, w, h);
+        g.strokeStyle = '#111'; g.lineWidth = 10; g.strokeRect(8, 8, w - 16, h - 16);
+        g.fillStyle = '#111'; g.beginPath(); g.moveTo(140, 22); g.lineTo(92, 96); g.lineTo(126, 96); g.lineTo(106, 156); g.lineTo(168, 72); g.lineTo(132, 72); g.closePath(); g.fill();
+    });
+    const board = new THREE.Mesh(new THREE.PlaneGeometry(0.46, 0.32), new THREE.MeshStandardMaterial({ map: boardTex, roughness: 0.6 }));
+    board.position.set(postX[1], groundY(postX[1], 0) + 1.25, 0.1); scene.add(board); refs.board = board;
+})();
 
-/* ---------- energy pulses along the wires ---------- */
-const PULSES = isMobile ? 6 : 12;
+/* ------------------------------------------------------------ sun + travelling pulses */
+const sun = glow(0xffd69a, 26, 0.55); sun.position.set(-24, 15, -60); scene.add(sun);
+const PULSES = isMobile ? 5 : 10;
 const pulses = [];
 for (let i = 0; i < PULSES; i++) {
-    const s = makeGlowSprite(i % 3 === 0 ? C.gold : C.white, 0.5, 0.95);
-    world.add(s);
-    pulses.push({ sprite: s, wire: Math.floor(Math.random() * FENCE.wires), t: Math.random(), v: (0.06 + Math.random() * 0.08) * (Math.random() > 0.5 ? 1 : -1) });
+    const col = i % 3 === 0 ? 0xb6ec62 : 0x8fdcff;
+    const head = glow(col, 0.55, 1), trail = [glow(col, 0.42, 0.6), glow(col, 0.32, 0.38), glow(col, 0.24, 0.2), glow(col, 0.18, 0.1)];
+    scene.add(head); trail.forEach(t => scene.add(t));
+    pulses.push({ head, trail, wire: (i * 3) % FENCE.wires, t: rnd(), v: 0.035 + rnd() * 0.04 });
 }
-// wire glow duplicate (soft) — cheap fake bloom on the wires
-wirePaths.forEach(pts => {
-    const g = new THREE.BufferGeometry().setFromPoints(pts);
-    const l = new THREE.Line(g, new THREE.LineBasicMaterial({ color: C.holo, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending }));
-    l.position.z = 0.061; l.scale.set(1, 1.004, 1); fence.add(l);
-});
+function placeOnWire(sprite, pts, t) {
+    const f = Math.min(Math.max(t, 0), 1) * (pts.length - 1), i = Math.min(pts.length - 2, Math.floor(f));
+    sprite.position.lerpVectors(pts[i], pts[i + 1], f - i);
+}
 
-/* ---------- ambient floating dust ---------- */
-(function dust() {
-    const N = isMobile ? 120 : 260, pos = [];
-    for (let i = 0; i < N; i++) pos.push((Math.random() - 0.5) * 40, Math.random() * 9, (Math.random() - 0.5) * 30);
-    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-    const p = new THREE.Points(g, new THREE.PointsMaterial({ color: C.holo, size: 0.05, transparent: true, opacity: 0.35, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-    p.userData.isDust = true; world.add(p);
-})();
-
-/* ------------------------------------------------------------ post-processing */
-let composer = null, bloom = null;
-try {
-    composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    bloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), isMobile ? 0.9 : 1.15, 0.55, 0.12);
-    composer.addPass(bloom);
-    composer.setPixelRatio(renderer.getPixelRatio());
-} catch (e) { composer = null; }
-
-/* ------------------------------------------------------------ camera choreography */
-// Each shot: camera position, look-at target. Interpolated by scroll progress on the home page.
-const unitX = postX[unitPostIndex];
-const SHOTS = [
-    { pos: [-9.0, 3.6, 12.5], look: [3.8, 2.3, 0] },                       // 0 hero: fence low-right, headline breathes on the left
-    { pos: [unitX - 4.2, 3.4, 5.4], look: [unitX, 2.6, -0.5] },             // 1 harvest: the panel + sun
-    { pos: [unitX + 2.6, 1.9, 2.8], look: [unitX, 1.5, -0.4] },             // 2 store/energize: energizer + battery
-    { pos: [postX[2] + 0.5, 1.15, 1.9], look: [postX[8], 1.25, 0] },        // 3 defend: low along the wires, pulses racing at you
-    { pos: [4, 9.5, 14], look: [0, 0.8, 0] },                               // 4 perimeter: high pull-back
-    { pos: [-5.5, 3.0, 10.5], look: [2.5, 1.9, 0] }                          // 5 settle: gentle 3/4 view for inner pages
+/* ------------------------------------------------------------ camera shots */
+const P = (x, y, z) => new THREE.Vector3(x, y, z);
+const SHOTS = isMobile ? [
+    { pos: P(5.2, 1.5, 3.8), look: P(-6, 0.4, -1.2) },
+    { pos: P(unitX + 2.1, 3.0, 3.2), look: P(unitX - 0.2, 3.1, -0.6) },
+    { pos: P(unitX + 1.3, 1.9, 2.6), look: P(unitX + 0.2, 1.2, -0.4) },
+    { pos: P(9.5, 1.0, 1.3), look: P(-16, 1.2, 0) },
+    { pos: P(16, 10, 18), look: P(-12, 0, -2) }
+] : [
+    { pos: P(9.6, 1.65, 4.6), look: P(-10, 1.55, -1.6) },
+    { pos: P(unitX + 3.0, 3.0, 3.4), look: P(unitX - 1.6, 3.1, -0.4) },
+    { pos: P(unitX + 1.7, 1.65, 2.6), look: P(unitX + 1.0, 1.4, -0.9) },
+    { pos: P(9.5, 0.95, 1.25), look: P(-18, 1.15, 0.2) },
+    { pos: P(17, 9, 17), look: P(-12, 0, -3) }
 ];
-if (isMobile) { // bring the camera in so the fence reads on a phone
-    SHOTS[0] = { pos: [-5.5, 3.2, 8.5], look: [3.0, 2.2, 0] };
-    SHOTS[4] = { pos: [3, 7.5, 10.5], look: [0, 0.8, 0] };
-    SHOTS[5] = { pos: [-4, 2.8, 8], look: [2.0, 1.9, 0] };
-}
-const camPos = new THREE.Vector3(), camLook = new THREE.Vector3(), tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3();
-let progress = 0;          // 0..1 along the story (home) — inner pages fix a shot
-let fixedShot = null;
-const dataShot = canvas.getAttribute('data-shot');
-if (dataShot != null) fixedShot = parseInt(dataShot, 10);
-
-function smoothstep(t) { return t * t * (3 - 2 * t); }
+const camPos = new THREE.Vector3(), camLook = new THREE.Vector3();
+let progress = 0, smoothP = 0;
 function shotAt(p) {
-    if (fixedShot != null) {
-        const s = SHOTS[Math.min(fixedShot, SHOTS.length - 1)];
-        camPos.set(s.pos[0], s.pos[1], s.pos[2]); camLook.set(s.look[0], s.look[1], s.look[2]); return;
-    }
-    const n = SHOTS.length - 1;
-    const f = Math.min(Math.max(p, 0), 1) * n;
-    const i = Math.min(n - 1, Math.floor(f));
-    const t = smoothstep(f - i);
-    const a = SHOTS[i], b = SHOTS[i + 1];
-    tmpA.set(a.pos[0], a.pos[1], a.pos[2]); tmpB.set(b.pos[0], b.pos[1], b.pos[2]); camPos.lerpVectors(tmpA, tmpB, t);
-    tmpA.set(a.look[0], a.look[1], a.look[2]); tmpB.set(b.look[0], b.look[1], b.look[2]); camLook.lerpVectors(tmpA, tmpB, t);
+    const n = SHOTS.length - 1, f = Math.min(Math.max(p, 0), 1) * n, i = Math.min(n - 1, Math.floor(f));
+    let t = f - i; t = t * t * (3 - 2 * t);
+    camPos.lerpVectors(SHOTS[i].pos, SHOTS[i + 1].pos, t);
+    camLook.lerpVectors(SHOTS[i].look, SHOTS[i + 1].look, t);
 }
-window.NC_setProgress = function (p) { progress = p; };
+window.NC_setProgress = (p) => { progress = reduced ? 0 : p; requestRender(); };
 window.NC_shots = SHOTS.length;
 
-/* ------------------------------------------------------------ hotspot projection (for HTML markers) */
+/* ------------------------------------------------------------ hotspots */
 const markers = Array.from(document.querySelectorAll('[data-hotspot]'));
-const hotspotTargets = {
-    panel: () => { const r = solarUnit.userData.refs.panel; r.getWorldPosition(panelWorldPos); return panelWorldPos; },
-    energizer: () => { solarUnit.userData.refs.enr.getWorldPosition(energizerWorldPos); return energizerWorldPos; },
-    board: () => { solarUnit.userData.refs.board.getWorldPosition(boardWorldPos); return boardWorldPos; },
-    wire: () => { const pts = wirePaths[3]; return pts[Math.floor(pts.length * 0.5)]; },
-    sun: () => sun.position
+const tmp = new THREE.Vector3();
+const targets = {
+    panel: () => refs.panel.getWorldPosition(tmp),
+    energizer: () => refs.energizer.getWorldPosition(tmp),
+    board: () => refs.board.getWorldPosition(tmp),
+    wire: () => tmp.copy(wirePaths[3][Math.floor(wirePaths[3].length * 0.12)]),
+    sun: () => tmp.copy(sun.position)
 };
-const proj = new THREE.Vector3();
-function currentShotIndex() {
-    if (fixedShot != null) return Math.min(fixedShot, SHOTS.length - 1);
-    return Math.round(Math.min(Math.max(smoothP, 0), 1) * (SHOTS.length - 1));
-}
-function updateMarkers() {
-    const shot = currentShotIndex();
+function updateMarkers(visible) {
+    const shot = Math.round(Math.min(Math.max(smoothP, 0), 1) * (SHOTS.length - 1));
+    const w = window.innerWidth, h = window.innerHeight;
     for (const m of markers) {
-        const key = m.getAttribute('data-hotspot');
-        const fn = hotspotTargets[key]; if (!fn) continue;
+        const fn = targets[m.getAttribute('data-hotspot')];
         const allowed = (m.getAttribute('data-shots') || '').split(',').map(Number);
-        if (allowed.length && !allowed.includes(shot)) { m.style.opacity = '0'; continue; }
-        proj.copy(fn()).project(camera);
-        const visible = proj.z < 1 && Math.abs(proj.x) < 1.1 && Math.abs(proj.y) < 1.1;
-        m.style.opacity = visible ? '' : '0';
-        m.style.transform = `translate(${((proj.x + 1) / 2 * window.innerWidth).toFixed(1)}px, ${((1 - proj.y) / 2 * window.innerHeight).toFixed(1)}px)`;
+        if (!visible || !fn || !allowed.includes(shot)) { m.style.opacity = '0'; continue; }
+        const v = fn().project(camera);
+        const on = v.z < 1 && Math.abs(v.x) < 0.95 && Math.abs(v.y) < 0.92;
+        m.style.opacity = on ? '1' : '0';
+        m.style.transform = `translate(${((v.x + 1) / 2 * w).toFixed(1)}px, ${((1 - v.y) / 2 * h).toFixed(1)}px)`;
     }
 }
 
-/* ------------------------------------------------------------ mouse parallax */
+/* ------------------------------------------------------------ pointer depth */
 let mx = 0, my = 0, tmx = 0, tmy = 0;
-window.addEventListener('mousemove', e => { tmx = (e.clientX / window.innerWidth - 0.5); tmy = (e.clientY / window.innerHeight - 0.5); }, { passive: true });
+if (!isMobile && !reduced) window.addEventListener('pointermove', (e) => { tmx = e.clientX / window.innerWidth - 0.5; tmy = e.clientY / window.innerHeight - 0.5; }, { passive: true });
 
 /* ------------------------------------------------------------ resize */
 function onResize() {
-    const w = window.innerWidth, h = window.innerHeight;
-    camera.aspect = w / h; camera.updateProjectionMatrix();
-    renderer.setSize(w, h, false);
-    if (composer) { composer.setSize(w, h); }
+    const w = canvas.clientWidth || window.innerWidth, h = canvas.clientHeight || window.innerHeight;
+    camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h, false);
+    requestRender();
 }
 window.addEventListener('resize', onResize);
 
-/* ------------------------------------------------------------ animate */
+/* ------------------------------------------------------------ loop: runs only while the story is on screen */
 const clock = new THREE.Clock();
-let smoothP = 0;
-const sunDir = new THREE.Vector3(), panelPos = new THREE.Vector3();
-function frame() {
-    const dt = Math.min(clock.getDelta(), 0.05);
-    const t = clock.elapsedTime;
-
-    // camera
-    smoothP += (progress - smoothP) * Math.min(1, dt * 5);
+let inView = true, running = false, pending = false;
+function draw(dt, t) {
+    smoothP += (progress - smoothP) * (reduced ? 1 : Math.min(1, dt * 4.5));
     shotAt(smoothP);
     mx += (tmx - mx) * 0.05; my += (tmy - my) * 0.05;
-    camera.position.set(camPos.x + mx * 0.9, camPos.y - my * 0.5 + Math.sin(t * 0.35) * 0.06, camPos.z);
-    camera.lookAt(camLook.x, camLook.y, camLook.z);
-
-    // idle world sway (very subtle) — makes it feel alive when scroll is still
-    world.rotation.y = Math.sin(t * 0.08) * 0.02;
-
-    // pulses along wires
-    for (const p of pulses) {
-        p.t += p.v * dt;
-        if (p.t > 1 || p.t < 0) { p.wire = Math.floor(Math.random() * FENCE.wires); p.t = p.v > 0 ? 0 : 1; p.v = (0.06 + Math.random() * 0.09) * (Math.random() > 0.5 ? 1 : -1); }
-        const pts = wirePaths[p.wire];
-        const f = p.t * (pts.length - 1), i = Math.min(pts.length - 2, Math.floor(f)), k = f - i;
-        p.sprite.position.lerpVectors(pts[i], pts[i + 1], k);
-        p.sprite.material.opacity = 0.7 + 0.3 * Math.sin(t * 9 + i);
+    camera.position.set(camPos.x + mx * 0.6, camPos.y - my * 0.3 + (reduced ? 0 : Math.sin(t * 0.3) * 0.03), camPos.z + mx * 0.3);
+    camera.lookAt(camLook);
+    if (!reduced) {
+        for (const p of pulses) {
+            p.t -= p.v * dt;                                     // flow away from the energizer, down the line
+            if (p.t < 0) { p.t = 0.02 + rnd() * 0.08; p.wire = Math.floor(rnd() * FENCE.wires); p.v = 0.03 + rnd() * 0.045; }
+            const pts = wirePaths[p.wire];
+            placeOnWire(p.head, pts, p.t);
+            p.trail.forEach((s, k) => placeOnWire(s, pts, p.t + (k + 1) * 0.0028));
+        }
+        const beat = Math.sin(t * (Math.PI * 2 / 1.2)) > 0.55;  // 1.2 s pulse interval
+        refs.led.material.opacity = beat ? 1 : 0.2;
+    } else {
+        pulses.forEach((p, i) => { const pts = wirePaths[p.wire]; placeOnWire(p.head, pts, 0.05 + i * 0.03); p.trail.forEach((s, k) => placeOnWire(s, pts, 0.05 + i * 0.03 + (k + 1) * 0.0035)); });
     }
-
-    // photons: sun → panel
-    solarUnit.userData.refs.panel.getWorldPosition(panelPos);
-    for (let i = 0; i < PHOTONS; i++) {
-        photonT[i] += dt * 0.22;
-        if (photonT[i] > 1) photonT[i] -= 1;
-        const s = photonT[i];
-        // slight spread
-        const spread = (1 - s) * 1.6;
-        const ox = Math.sin(i * 12.9898) * spread, oy = Math.cos(i * 78.233) * spread * 0.4, oz = Math.sin(i * 39.7) * spread;
-        photonPos[i * 3] = sun.position.x + (panelPos.x - sun.position.x) * s + ox;
-        photonPos[i * 3 + 1] = sun.position.y + (panelPos.y - sun.position.y) * s + oy;
-        photonPos[i * 3 + 2] = sun.position.z + (panelPos.z - sun.position.z) * s + oz;
-    }
-    photonGeo.attributes.position.needsUpdate = true;
-    photons.material.opacity = 0.55 + 0.35 * Math.sin(t * 2.0);
-
-    // sun breathing + LED heartbeat (1.2 s)
-    const br = 1 + 0.05 * Math.sin(t * 0.9);
-    sun.scale.set(4.2 * br, 4.2 * br, 1); sunHalo.scale.set(12 * br, 12 * br, 1);
-    const led = solarUnit.userData.led; led.material.opacity = Math.sin(t * (Math.PI * 2 / 1.2)) > 0.6 ? 1 : 0.15;
-
-    updateMarkers();
-    if (composer) composer.render(); else renderer.render(scene, camera);
-    if (!reduced) requestAnimationFrame(frame);
+    renderer.render(scene, camera);
+    updateMarkers(inView);
 }
-if (reduced) { progress = 0; frame(); } else requestAnimationFrame(frame);
+function loop() {
+    if (!inView || document.hidden) { running = false; return; }
+    const dt = Math.min(clock.getDelta(), 0.05);
+    draw(dt, clock.elapsedTime);
+    requestAnimationFrame(loop);
+}
+function start() { if (running || reduced) return; running = true; clock.getDelta(); requestAnimationFrame(loop); }
+function requestRender() {
+    if (!reduced) { start(); return; }
+    if (pending) return; pending = true;
+    requestAnimationFrame(() => { pending = false; draw(0, 0); });
+}
+new IntersectionObserver((entries) => {
+    inView = entries[0].isIntersecting;
+    if (inView) { canvas.style.visibility = ''; requestRender(); }
+    else { canvas.style.visibility = 'hidden'; updateMarkers(false); }
+}, { threshold: 0 }).observe(story);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) requestRender(); });
 
+onResize();
+shotAt(0); smoothP = progress;
+draw(0, 0);
 document.documentElement.classList.add('scene-ready');
+requestRender();
+
+/* debug/QA handle — lets automated checks jump to a shot without scrolling */
+window.NCScene = { jump(i) { progress = smoothP = i / (SHOTS.length - 1); draw(0, clock.elapsedTime); }, info: () => ({ progress, smoothP, running, inView }) };

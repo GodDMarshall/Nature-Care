@@ -39,8 +39,12 @@ app.post('/submit-assessment', (req, res) => {
         'property-size': propertySize, 
         'primary-threat': primaryThreat, 
         'email-address': emailAddress, 
-        'phone-number': phoneNumber 
+        'phone-number': phoneNumber,
+        'estimate-summary': estimateSummary // optional, filled by the fence planner on index.html
     } = req.body;
+
+    // Optional free-text notes / fence plan. Plain text only, capped so the email stays sane.
+    const notes = typeof estimateSummary === 'string' ? estimateSummary.trim().slice(0, 2000) : '';
 
     // Basic validation - catches empty/malformed submissions before we try to email them
     if (!fullName || !companyName || !emailAddress || !phoneNumber) {
@@ -71,7 +75,11 @@ app.post('/submit-assessment', (req, res) => {
             --------------------------------------------------
             Corporate Email: ${emailAddress}
             Contact Phone Number: ${phoneNumber}
-            
+            ${notes ? `
+            Fence Plan / Notes:
+            --------------------------------------------------
+            ${notes.replace(/\n/g, '\n            ')}
+            ` : ''}
             Submitted on: ${new Date().toLocaleString()}
         `
     };

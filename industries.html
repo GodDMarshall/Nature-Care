@@ -5,16 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sectors We Defend | Nature Care</title>
     <meta name="description" content="Perimeter security for industry, energy, agriculture, forestry and residential estates.">
+    <meta name="theme-color" content="#07110C">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Nature Care">
+    <meta property="og:title" content="Sectors We Defend | Nature Care">
+    <meta property="og:description" content="Perimeter security for industry, energy, agriculture, forestry and residential estates.">
     <link rel="icon" href="image/logo.jpeg">
+    <link rel="preload" href="fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="style.css">
 </head>
 <body data-page="industries">
 
-<canvas id="scene" data-shot="4" aria-hidden="true"></canvas>
-<div class="stage-vignette" aria-hidden="true"></div>
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-nav">
     <a href="index.html" class="brand" aria-label="Nature Care — Home">
-        <img src="image/logo-holo-mark.png" alt="Nature Care logo">
+        <img src="image/logo-light-mark.png" alt="Nature Care logo" width="48" height="48">
         <span class="brand-word">Nature Care<small>We Protect</small></span>
     </a>
     <nav class="nav-links" aria-label="Primary Site Navigation">
@@ -22,9 +28,12 @@
         <a href="solution.html">Solutions</a>
         <a href="industries.html" aria-current="page">Industries</a>
         <a href="projects.html">Projects</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="index.html#testimonials">Testimonials</a>
         <a href="index.html#assessment" class="btn btn-gold" data-magnetic>Request Assessment</a>
     </nav>
-    <button id="burger" aria-label="Open menu" aria-expanded="false"><i></i><i></i></button>
+    <a class="call-now" href="tel:+919845571328" aria-label="Call Now: 98455 71328"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span>Call Now</span></a>
+    <button id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><i></i><i></i></button>
 </header>
 
 <div id="mobile-menu" aria-label="Mobile Navigation">
@@ -32,18 +41,23 @@
     <a href="solution.html"><span>02</span> Solutions</a>
     <a href="industries.html"><span>03</span> Industries</a>
     <a href="projects.html"><span>04</span> Projects</a>
-    <a href="index.html#assessment"><span>05</span> Request Assessment</a>
+    <a href="gallery.html"><span>05</span> Gallery</a>
+    <a href="index.html#testimonials"><span>06</span> Testimonials</a>
+    <a href="index.html#assessment"><span>07</span> Request Assessment</a>
+    <a href="tel:+919845571328"><span>08</span> Call Now · 98455 71328</a>
     <p class="menu-meta">Mysore, Karnataka — Since 2006<br>Protection Through Innovation</p>
 </div>
 
 <div id="page">
-<main>
+<main id="main">
     <section class="page-hero" aria-labelledby="ph">
+        <div class="ph-media" data-parallax-img><img src="image/web/factory-complex-aerial.webp" srcset="image/web/factory-complex-aerial-sm.webp 720w, image/web/factory-complex-aerial.webp 1400w" sizes="100vw" alt="Industrial complex protected by a perimeter fence" fetchpriority="high"></div>
         <div class="wrap">
             <p class="kicker">The sectors</p>
             <h1 id="ph">Sectors we defend.</h1>
             <p class="lead">Specialized, field-tested perimeter architectures engineered for complex regulatory frameworks and high-risk environments.</p>
         </div>
+        <svg class="wireline" viewBox="0 0 1600 46" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="fb-wire" d="M0 12 H1600 M0 24 H1600 M0 36 H1600"/><path class="fb-pulse" pathLength="1460" d="M0 24 H1600"/><path class="fb-pulse l" pathLength="1460" d="M0 12 H1600"/></svg>
     </section>
     <div class="dimmer">
 
@@ -56,7 +70,7 @@
             </div>
             <div class="duo-grid">
                 <article id="industrial" class="duo-card card rv">
-                    <div class="d-img"><img src="image/logistics-warehouse.png" alt="Industrial logistics warehouse perimeter" loading="lazy"></div>
+                    <div class="d-img"><img src="image/web/logistics-warehouse.webp" srcset="image/web/logistics-warehouse-sm.webp 720w, image/web/logistics-warehouse.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Industrial logistics warehouse perimeter" loading="lazy"></div>
                     <h3>Commercial &amp; Industrial Logistics</h3>
                     <p><strong>The mandate:</strong> preventing cargo theft, unauthorized entry, and vandalism across logistics hubs, warehouses, and manufacturing plants.</p>
                     <ul>
@@ -65,7 +79,7 @@
                     </ul>
                 </article>
                 <article id="government" class="duo-card card rv">
-                    <div class="d-img"><img src="image/factory-complex-aerial.png" alt="Strategic energy infrastructure site" loading="lazy"></div>
+                    <div class="d-img"><img src="image/web/factory-complex-aerial.webp" srcset="image/web/factory-complex-aerial-sm.webp 720w, image/web/factory-complex-aerial.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Strategic energy infrastructure site" loading="lazy"></div>
                     <h3>Strategic Energy &amp; Infrastructure</h3>
                     <p><strong>The mandate:</strong> protecting critical infrastructure — solar farms, substations, water treatment — where downtime is not an option.</p>
                     <ul>
@@ -74,7 +88,7 @@
                     </ul>
                 </article>
                 <article id="wildlife" class="duo-card card rv">
-                    <div class="d-img"><img src="image/tea-plantation-aerial.png" alt="Plantation and forest boundary" loading="lazy"></div>
+                    <div class="d-img"><img src="image/web/tea-plantation-aerial.webp" srcset="image/web/tea-plantation-aerial-sm.webp 720w, image/web/tea-plantation-aerial.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Plantation and forest boundary" loading="lazy"></div>
                     <h3>Enterprise Agriculture &amp; Forestry</h3>
                     <p><strong>The mandate:</strong> ending yield losses from wildlife encroachment on commercial plantations, tea estates, and managed forestry zones.</p>
                     <ul>
@@ -83,7 +97,7 @@
                     </ul>
                 </article>
                 <article id="residential" class="duo-card card rv">
-                    <div class="d-img"><img src="image/residential-villa-gate.png" alt="Premium residential gated community" loading="lazy"></div>
+                    <div class="d-img"><img src="image/web/residential-villa-gate.webp" srcset="image/web/residential-villa-gate-sm.webp 720w, image/web/residential-villa-gate.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Premium residential gated community" loading="lazy"></div>
                     <h3>Premium Residential Enclaves</h3>
                     <p><strong>The mandate:</strong> continuous, high-grade perimeter defense for gated communities, private villas, and corporate real estate.</p>
                     <ul>
@@ -175,7 +189,7 @@
 <footer class="site-footer">
     <div class="foot-grid">
         <div class="foot-brand">
-            <img src="image/logo-holo.png" alt="Nature Care — Protection Through Innovation" loading="lazy">
+            <img src="image/logo-light.png" alt="Nature Care — Protection Through Innovation" width="130" height="130" loading="lazy">
             <p>Solar power fence solutions engineered in Karnataka and deployed across India since 2006.</p>
         </div>
         <div class="foot-col">
@@ -185,12 +199,16 @@
                 <li><a href="solution.html">Engineering Solutions</a></li>
                 <li><a href="industries.html">Sectors We Defend</a></li>
                 <li><a href="projects.html">Deployment Portfolio</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="index.html#testimonials">Testimonials</a></li>
             </ul>
         </div>
         <div class="foot-col">
             <h4>Connect</h4>
             <ul>
                 <li><a href="index.html#assessment">Request an Assessment</a></li>
+                <li><a href="index.html#estimator">Plan Your Fence</a></li>
+                <li><a href="tel:+919845571328">Call Now: 98455 71328</a></li>
                 <li>Corporate HQ: Mysore, Karnataka, India</li>
             </ul>
         </div>
@@ -202,11 +220,9 @@
 </footer>
 </div>
 
-<script type="importmap">{ "imports": { "three": "./vendor/three/three.module.min.js" } }</script>
 <script src="vendor/gsap.min.js"></script>
 <script src="vendor/ScrollTrigger.min.js"></script>
 <script src="vendor/lenis.min.js"></script>
 <script src="js/main.js"></script>
-<script type="module" src="js/scene.js"></script>
 </body>
 </html>
