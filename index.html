@@ -5,21 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nature Care | Solar Power Fence Solutions</title>
     <meta name="description" content="Solar-powered electric fencing for farms, forests, factories and homes across India. 2,800+ km deployed since 2006. ISO 9001:2015. Zero lethal incidents.">
+    <meta name="theme-color" content="#07110C">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Nature Care">
+    <meta property="og:title" content="Nature Care | Solar Power Fence Solutions">
+    <meta property="og:description" content="Solar-powered electric fencing for farms, forests, factories and homes across India. 2,800+ km deployed since 2006. ISO 9001:2015. Zero lethal incidents.">
     <link rel="icon" href="image/logo.jpeg">
+    <link rel="preload" href="fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="style.css">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Organization","name":"Nature Care Private Limited","alternateName":"Nature Care","slogan":"Protection Through Innovation","foundingDate":"2006","description":"Solar power fence solutions engineered in Karnataka and deployed across India since 2006.","address":{"@type":"PostalAddress","addressLocality":"Mysore","addressRegion":"Karnataka","addressCountry":"IN"}}
+    </script>
+    <link rel="preload" as="image" href="image/web/tea-plantation-aerial.webp" imagesrcset="image/web/tea-plantation-aerial-sm.webp 720w, image/web/tea-plantation-aerial.webp 1400w" imagesizes="100vw">
 </head>
 <body data-page="home">
 
-<canvas id="scene" aria-hidden="true"></canvas>
-<div class="stage-vignette" aria-hidden="true"></div>
-<div class="hotspot" data-hotspot="sun" data-shots="0,1,5"><span class="dot">+</span><span class="tag">Solar source</span></div>
-<div class="hotspot" data-hotspot="panel" data-shots="0,1,5"><span class="dot">+</span><span class="tag">NF 2200 PV module</span></div>
-<div class="hotspot" data-hotspot="energizer" data-shots="2"><span class="dot">+</span><span class="tag">NF-series energizer</span></div>
-<div class="hotspot" data-hotspot="wire" data-shots="3"><span class="dot">+</span><span class="tag">7-strand HT wire · 8,000 V pulse</span></div>
-<div class="hotspot" data-hotspot="board" data-shots="2"><span class="dot">+</span><span class="tag">NF 1010 warning board</span></div>
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-nav">
     <a href="index.html" class="brand" aria-label="Nature Care — Home">
-        <img src="image/logo-holo-mark.png" alt="Nature Care logo">
+        <img src="image/logo-light-mark.png" alt="Nature Care logo" width="48" height="48">
         <span class="brand-word">Nature Care<small>We Protect</small></span>
     </a>
     <nav class="nav-links" aria-label="Primary Site Navigation">
@@ -27,9 +32,11 @@
         <a href="solution.html">Solutions</a>
         <a href="industries.html">Industries</a>
         <a href="projects.html">Projects</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="#testimonials">Testimonials</a>
         <a href="#assessment" class="btn btn-gold" data-magnetic>Request Assessment</a>
     </nav>
-    <button id="burger" aria-label="Open menu" aria-expanded="false"><i></i><i></i></button>
+    <button id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><i></i><i></i></button>
 </header>
 
 <div id="mobile-menu" aria-label="Mobile Navigation">
@@ -37,20 +44,160 @@
     <a href="solution.html"><span>02</span> Solutions</a>
     <a href="industries.html"><span>03</span> Industries</a>
     <a href="projects.html"><span>04</span> Projects</a>
-    <a href="#assessment"><span>05</span> Request Assessment</a>
+    <a href="gallery.html"><span>05</span> Gallery</a>
+    <a href="#testimonials"><span>06</span> Testimonials</a>
+    <a href="#assessment"><span>07</span> Request Assessment</a>
     <p class="menu-meta">Mysore, Karnataka — Since 2006<br>Protection Through Innovation</p>
 </div>
 
-<div id="page">
-<main>
+<div class="hotspots" aria-hidden="true">
+<div class="hotspot" data-hotspot="sun" data-shots="0,1"><span class="dot">+</span><span class="tag">Solar source</span></div>
+<div class="hotspot" data-hotspot="panel" data-shots="0,1"><span class="dot">+</span><span class="tag">NF 2200 PV module</span></div>
+<div class="hotspot" data-hotspot="energizer" data-shots="2"><span class="dot">+</span><span class="tag">NF-series energizer</span></div>
+<div class="hotspot" data-hotspot="wire" data-shots="3"><span class="dot">+</span><span class="tag">7-strand HT wire · 8,000 V pulse</span></div>
+<div class="hotspot" data-hotspot="board" data-shots="2"><span class="dot">+</span><span class="tag">NF 1010 warning board</span></div>
+</div>
 
-    <!-- =================== 3D STORY =================== -->
+<div id="page">
+<main id="main">
+
+    <!-- =================== HERO + 3D STORY =================== -->
     <div class="story">
+        <div class="stage" aria-hidden="true">
+            <div class="stage-photo" data-stage-photo><img src="image/web/tea-plantation-aerial.webp" srcset="image/web/tea-plantation-aerial-sm.webp 720w, image/web/tea-plantation-aerial.webp 1400w" sizes="100vw" alt="" fetchpriority="high"></div>
+            <svg class="stage-fallback" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+<path class="fb-wire" d="M1500.0 865.1 Q1340.2 816.4 1180.3 751.8 Q1070.4 718.3 960.5 673.9 Q886.9 651.5 813.3 621.7 Q761.4 605.9 709.5 584.9 Q672.8 573.7 636.1 558.9 Q610.3 551.0 584.4 540.6 Q566.8 535.2 549.2 528.1 Q536.7 524.3 524.2 519.2 Q515.5 516.6 506.8 513.0 Q500.7 511.2 494.5 508.7 Q490.3 507.4 486.1 505.7"/>
+<path class="fb-wire" d="M1500.0 777.5 Q1340.2 742.4 1180.3 691.4 Q1070.4 667.3 960.5 632.1 Q886.9 616.0 813.3 592.5 Q761.4 581.1 709.5 564.5 Q672.8 556.5 636.1 544.8 Q610.3 539.1 584.4 530.8 Q566.8 527.0 549.2 521.3 Q536.7 518.6 524.2 514.6 Q515.5 512.7 506.8 509.9 Q500.7 508.6 494.5 506.6 Q490.3 505.7 486.1 504.3"/>
+<path class="fb-wire" d="M1500.0 689.9 Q1340.2 668.4 1180.3 631.0 Q1070.4 616.2 960.5 590.4 Q886.9 580.5 813.3 563.3 Q761.4 556.3 709.5 544.2 Q672.8 539.2 636.1 530.6 Q610.3 527.2 584.4 521.1 Q566.8 518.7 549.2 514.6 Q536.7 512.9 524.2 510.0 Q515.5 508.8 506.8 506.8 Q500.7 506.0 494.5 504.5 Q490.3 504.0 486.1 503.0"/>
+<path class="fb-wire" d="M1500.0 602.3 Q1340.2 594.4 1180.3 570.6 Q1070.4 565.1 960.5 548.7 Q886.9 545.1 813.3 534.1 Q761.4 531.5 709.5 523.8 Q672.8 522.0 636.1 516.5 Q610.3 515.2 584.4 511.4 Q566.8 510.5 549.2 507.9 Q536.7 507.3 524.2 505.4 Q515.5 505.0 506.8 503.7 Q500.7 503.4 494.5 502.4 Q490.3 502.2 486.1 501.6"/>
+<path class="fb-wire" d="M1500.0 514.7 Q1340.2 520.4 1180.3 510.1 Q1070.4 514.1 960.5 507.0 Q886.9 509.6 813.3 504.9 Q761.4 506.8 709.5 503.4 Q672.8 504.7 636.1 502.4 Q610.3 503.3 584.4 501.6 Q566.8 502.3 549.2 501.1 Q536.7 501.6 524.2 500.8 Q515.5 501.1 506.8 500.5 Q500.7 500.7 494.5 500.4 Q490.3 500.5 486.1 500.2"/>
+<path class="fb-wire" d="M1500.0 427.1 Q1340.2 446.4 1180.3 449.7 Q1070.4 463.0 960.5 465.3 Q886.9 474.2 813.3 475.7 Q761.4 482.0 709.5 483.0 Q672.8 487.5 636.1 488.2 Q610.3 491.4 584.4 491.9 Q566.8 494.0 549.2 494.4 Q536.7 495.9 524.2 496.2 Q515.5 497.2 506.8 497.4 Q500.7 498.1 494.5 498.3 Q490.3 498.8 486.1 498.9"/>
+<path class="fb-wire" d="M1500.0 332.2 Q1340.2 366.2 1180.3 384.3 Q1070.4 407.7 960.5 420.1 Q886.9 435.8 813.3 444.1 Q761.4 455.1 709.5 461.0 Q672.8 468.8 636.1 472.9 Q610.3 478.4 584.4 481.4 Q566.8 485.1 549.2 487.1 Q536.7 489.8 524.2 491.2 Q515.5 493.0 506.8 494.0 Q500.7 495.3 494.5 496.0 Q490.3 496.9 486.1 497.4"/>
+<path class="fb-pulse" pathLength="1460" d="M1500.0 427.1 Q1340.2 446.4 1180.3 449.7 Q1070.4 463.0 960.5 465.3 Q886.9 474.2 813.3 475.7 Q761.4 482.0 709.5 483.0 Q672.8 487.5 636.1 488.2 Q610.3 491.4 584.4 491.9 Q566.8 494.0 549.2 494.4 Q536.7 495.9 524.2 496.2 Q515.5 497.2 506.8 497.4 Q500.7 498.1 494.5 498.3 Q490.3 498.8 486.1 498.9"/>
+<path class="fb-pulse l" pathLength="1460" d="M1500.0 689.9 Q1340.2 668.4 1180.3 631.0 Q1070.4 616.2 960.5 590.4 Q886.9 580.5 813.3 563.3 Q761.4 556.3 709.5 544.2 Q672.8 539.2 636.1 530.6 Q610.3 527.2 584.4 521.1 Q566.8 518.7 549.2 514.6 Q536.7 512.9 524.2 510.0 Q515.5 508.8 506.8 506.8 Q500.7 506.0 494.5 504.5 Q490.3 504.0 486.1 503.0"/>
+<path class="fb-pulse" pathLength="1460" style="animation-delay:-2.2s" d="M1500.0 865.1 Q1340.2 816.4 1180.3 751.8 Q1070.4 718.3 960.5 673.9 Q886.9 651.5 813.3 621.7 Q761.4 605.9 709.5 584.9 Q672.8 573.7 636.1 558.9 Q610.3 551.0 584.4 540.6 Q566.8 535.2 549.2 528.1 Q536.7 524.3 524.2 519.2 Q515.5 516.6 506.8 513.0 Q500.7 511.2 494.5 508.7 Q490.3 507.4 486.1 505.7"/>
+<rect class="fb-foot" x="485.4" y="506.9" width="1.3" height="0.3" rx="0.0"/>
+<rect class="fb-post" x="485.9" y="495.6" width="0.4" height="11.6" rx="0.1"/>
+<circle class="fb-ins" cx="485.9" cy="505.7" r="0.3"/>
+<circle class="fb-ins" cx="485.9" cy="504.3" r="0.3"/>
+<circle class="fb-ins" cx="485.9" cy="503.0" r="0.3"/>
+<circle class="fb-ins" cx="485.9" cy="501.6" r="0.3"/>
+<circle class="fb-ins" cx="485.9" cy="500.2" r="0.3"/>
+<circle class="fb-ins" cx="485.9" cy="498.9" r="0.3"/>
+<circle class="fb-ins" cx="485.9" cy="497.4" r="0.3"/>
+<rect class="fb-foot" x="493.5" y="510.5" width="2.0" height="0.5" rx="0.1"/>
+<rect class="fb-post" x="494.2" y="493.2" width="0.6" height="17.7" rx="0.2"/>
+<circle class="fb-ins" cx="494.2" cy="508.7" r="0.4"/>
+<circle class="fb-ins" cx="494.2" cy="506.6" r="0.4"/>
+<circle class="fb-ins" cx="494.2" cy="504.5" r="0.4"/>
+<circle class="fb-ins" cx="494.2" cy="502.4" r="0.4"/>
+<circle class="fb-ins" cx="494.2" cy="500.4" r="0.4"/>
+<circle class="fb-ins" cx="494.2" cy="498.3" r="0.4"/>
+<circle class="fb-ins" cx="494.2" cy="496.0" r="0.4"/>
+<rect class="fb-foot" x="505.3" y="515.8" width="3.0" height="0.8" rx="0.1"/>
+<rect class="fb-post" x="506.3" y="489.8" width="0.9" height="26.6" rx="0.3"/>
+<circle class="fb-ins" cx="506.3" cy="513.0" r="0.6"/>
+<circle class="fb-ins" cx="506.3" cy="509.9" r="0.6"/>
+<circle class="fb-ins" cx="506.3" cy="506.8" r="0.6"/>
+<circle class="fb-ins" cx="506.3" cy="503.7" r="0.6"/>
+<circle class="fb-ins" cx="506.3" cy="500.5" r="0.6"/>
+<circle class="fb-ins" cx="506.3" cy="497.4" r="0.6"/>
+<circle class="fb-ins" cx="506.3" cy="494.0" r="0.6"/>
+<rect class="fb-foot" x="522.0" y="523.3" width="4.4" height="1.2" rx="0.2"/>
+<rect class="fb-post" x="523.5" y="485.0" width="1.4" height="39.2" rx="0.5"/>
+<circle class="fb-ins" cx="523.5" cy="519.2" r="0.8"/>
+<circle class="fb-ins" cx="523.5" cy="514.6" r="0.8"/>
+<circle class="fb-ins" cx="523.5" cy="510.0" r="0.8"/>
+<circle class="fb-ins" cx="523.5" cy="505.4" r="0.8"/>
+<circle class="fb-ins" cx="523.5" cy="500.8" r="0.8"/>
+<circle class="fb-ins" cx="523.5" cy="496.2" r="0.8"/>
+<circle class="fb-ins" cx="523.5" cy="491.2" r="0.8"/>
+<rect class="fb-foot" x="546.0" y="534.0" width="6.4" height="1.7" rx="0.2"/>
+<rect class="fb-post" x="548.2" y="478.1" width="2.0" height="57.3" rx="0.7"/>
+<circle class="fb-ins" cx="548.1" cy="528.1" r="1.2"/>
+<circle class="fb-ins" cx="548.1" cy="521.3" r="1.2"/>
+<circle class="fb-ins" cx="548.1" cy="514.6" r="1.2"/>
+<circle class="fb-ins" cx="548.1" cy="507.9" r="1.2"/>
+<circle class="fb-ins" cx="548.1" cy="501.1" r="1.2"/>
+<circle class="fb-ins" cx="548.1" cy="494.4" r="1.2"/>
+<circle class="fb-ins" cx="548.1" cy="487.1" r="1.2"/>
+<rect class="fb-foot" x="579.8" y="549.1" width="9.2" height="2.4" rx="0.3"/>
+<rect class="fb-post" x="583.0" y="468.4" width="2.9" height="82.7" rx="1.0"/>
+<circle class="fb-ins" cx="582.9" cy="540.6" r="1.8"/>
+<circle class="fb-ins" cx="582.9" cy="530.8" r="1.8"/>
+<circle class="fb-ins" cx="582.9" cy="521.1" r="1.8"/>
+<circle class="fb-ins" cx="582.9" cy="511.4" r="1.8"/>
+<circle class="fb-ins" cx="582.9" cy="501.6" r="1.8"/>
+<circle class="fb-ins" cx="582.9" cy="491.9" r="1.8"/>
+<circle class="fb-ins" cx="582.9" cy="481.4" r="1.8"/>
+<rect class="fb-foot" x="629.4" y="571.3" width="13.4" height="3.5" rx="0.5"/>
+<rect class="fb-post" x="634.0" y="454.1" width="4.2" height="120.1" rx="1.4"/>
+<circle class="fb-ins" cx="633.8" cy="558.9" r="2.6"/>
+<circle class="fb-ins" cx="633.8" cy="544.8" r="2.6"/>
+<circle class="fb-ins" cx="633.8" cy="530.6" r="2.6"/>
+<circle class="fb-ins" cx="633.8" cy="516.5" r="2.6"/>
+<circle class="fb-ins" cx="633.8" cy="502.4" r="2.6"/>
+<circle class="fb-ins" cx="633.8" cy="488.2" r="2.6"/>
+<circle class="fb-ins" cx="633.8" cy="472.9" r="2.6"/>
+<rect class="fb-foot" x="699.9" y="602.8" width="19.3" height="5.1" rx="0.7"/>
+<rect class="fb-post" x="706.5" y="433.8" width="6.0" height="173.2" rx="2.0"/>
+<circle class="fb-ins" cx="706.2" cy="584.9" r="3.7"/>
+<circle class="fb-ins" cx="706.2" cy="564.5" r="3.7"/>
+<circle class="fb-ins" cx="706.2" cy="544.2" r="3.7"/>
+<circle class="fb-ins" cx="706.2" cy="523.8" r="3.7"/>
+<circle class="fb-ins" cx="706.2" cy="503.4" r="3.7"/>
+<circle class="fb-ins" cx="706.2" cy="483.0" r="3.7"/>
+<circle class="fb-ins" cx="706.2" cy="461.0" r="3.7"/>
+<rect class="fb-foot" x="799.5" y="647.3" width="27.7" height="7.3" rx="1.0"/>
+<rect class="fb-post" x="809.0" y="405.1" width="8.7" height="248.2" rx="2.9"/>
+<circle class="fb-ins" cx="808.6" cy="621.7" r="5.4"/>
+<circle class="fb-ins" cx="808.6" cy="592.5" r="5.4"/>
+<circle class="fb-ins" cx="808.6" cy="563.3" r="5.4"/>
+<circle class="fb-ins" cx="808.6" cy="534.1" r="5.4"/>
+<circle class="fb-ins" cx="808.6" cy="504.9" r="5.4"/>
+<circle class="fb-ins" cx="808.6" cy="475.7" r="5.4"/>
+<circle class="fb-ins" cx="808.6" cy="444.1" r="5.4"/>
+<rect class="fb-foot" x="940.7" y="710.5" width="39.6" height="10.5" rx="1.4"/>
+<rect class="fb-post" x="954.3" y="364.5" width="12.4" height="354.6" rx="4.1"/>
+<circle class="fb-ins" cx="953.7" cy="673.9" r="7.7"/>
+<circle class="fb-ins" cx="953.7" cy="632.1" r="7.7"/>
+<circle class="fb-ins" cx="953.7" cy="590.4" r="7.7"/>
+<circle class="fb-ins" cx="953.7" cy="548.7" r="7.7"/>
+<circle class="fb-ins" cx="953.7" cy="507.0" r="7.7"/>
+<circle class="fb-ins" cx="953.7" cy="465.3" r="7.7"/>
+<circle class="fb-ins" cx="953.7" cy="420.1" r="7.7"/>
+<rect class="fb-foot" x="1151.7" y="804.8" width="57.4" height="15.2" rx="2.1"/>
+<rect class="fb-post" x="1171.4" y="303.7" width="17.9" height="513.5" rx="6.0"/>
+<circle class="fb-ins" cx="1170.5" cy="751.8" r="11.1"/>
+<circle class="fb-ins" cx="1170.5" cy="691.4" r="11.1"/>
+<circle class="fb-ins" cx="1170.5" cy="631.0" r="11.1"/>
+<circle class="fb-ins" cx="1170.5" cy="570.6" r="11.1"/>
+<circle class="fb-ins" cx="1170.5" cy="510.1" r="11.1"/>
+<circle class="fb-ins" cx="1170.5" cy="449.7" r="11.1"/>
+<circle class="fb-ins" cx="1170.5" cy="384.3" r="11.1"/>
+<rect class="fb-foot" x="1458.4" y="942.0" width="83.2" height="22.0" rx="3.0"/>
+<rect class="fb-post" x="1487.0" y="215.4" width="26.0" height="744.6" rx="8.7"/>
+<circle class="fb-ins" cx="1485.7" cy="865.1" r="16.1"/>
+<circle class="fb-ins" cx="1485.7" cy="777.5" r="16.1"/>
+<circle class="fb-ins" cx="1485.7" cy="689.9" r="16.1"/>
+<circle class="fb-ins" cx="1485.7" cy="602.3" r="16.1"/>
+<circle class="fb-ins" cx="1485.7" cy="514.7" r="16.1"/>
+<circle class="fb-ins" cx="1485.7" cy="427.1" r="16.1"/>
+<circle class="fb-ins" cx="1485.7" cy="332.2" r="16.1"/>
+<rect class="fb-post" x="1171.3" y="183.7" width="18" height="140"/>
+<polygon points="1060.3,153.7 1275.3,107.7 1310.3,185.7 1092.3,229.7" fill="#16304A" stroke="#9FB3C2" stroke-width="3"/>
+<rect x="1134.3" y="453.7" width="92" height="120" rx="10" fill="#141A17" stroke="rgba(255,255,255,.12)"/>
+<rect x="1158.3" y="543.7" width="44" height="6" rx="3" fill="#A6E04A"/>
+</svg>
+
+            <canvas id="scene"></canvas>
+            <div class="stage-shade"></div>
+        </div>
 
         <section class="hero" aria-labelledby="hero-heading">
             <div class="wrap">
                 <div class="hero-copy">
-                    <p class="kicker">Solar power fence solutions · Since 2006</p>
+                    <p class="kicker pill">Solar power fence solutions · Since 2006</p>
                     <h1 id="hero-heading" class="h-hero">
                         <span class="line-mask"><span class="line-inner">The fence that</span></span>
                         <span class="line-mask"><span class="line-inner"><span class="grad">powers itself.</span></span></span>
@@ -60,13 +207,12 @@
                         <a href="#assessment" class="btn btn-gold" data-magnetic>Get a Free Site Assessment <span class="arr">→</span></a>
                         <a href="#s1" class="btn btn-holo" data-magnetic>Explore the System</a>
                     </div>
-                    <p class="hero-proof"><span><b>ISO 9001:2015</b> certified</span><span><b>2,800+ km</b> deployed</span><span><b>Zero</b> lethal incidents</span></p>
+                    <p class="hero-proof"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.4 8.4 8 9 4.6-.6 8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span><b>ISO 9001:2015</b> certified</span></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h4V7h4v10h4V7h4v10h2"/><path d="M3 11h18M3 14h18" opacity=".6"/></svg><span><b>2,800+ km</b> deployed</span></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 5-13 15-14-1 10-6 15-14 15"/><path d="M5 19 13 11"/></svg><span><b>Zero</b> lethal incidents</span></span></p>
                 </div>
             </div>
-            <div class="readout" aria-hidden="true"><span class="live"></span>Line status <b>ARMED</b><br>Pulse <b>8.0 kV</b> · every <b>1.2 s</b><br>Power <b>Solar · 100%</b></div>
+            <div class="readout glass" aria-hidden="true"><span class="r-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>Solar powered electric fencing</span><span class="live"></span>Line status <b>ARMED</b><br>Pulse <b>8.0 kV</b> · every <b>1.2 s</b><br>Power <b>Solar · 100%</b></div>
             <div class="scroll-cue" aria-hidden="true"><i></i>Scroll</div>
         </section>
-
         <section id="s1" class="scene-sec" aria-labelledby="s1-h">
             <div class="wrap">
                 <div class="scene-copy glass">
@@ -122,7 +268,37 @@
         </div>
     </div>
 
-    <section class="sec" aria-labelledby="systems-heading">
+    <section class="sec" aria-labelledby="cat-h">
+        <div class="wrap">
+            <div class="sec-head center">
+                <p class="kicker">Our solutions</p>
+                <h2 id="cat-h" class="h-sec">Perimeter protection for every <span class="hl">boundary.</span></h2>
+                <p class="lead">From wildlife corridors to compound walls — solar-powered protection, engineered for your site.</p>
+            </div>
+<div class="cat-grid">
+    <a class="cat-card rv" href="solution.html#wild-animal"><img src="image/web/hanging-fence-sm.webp" alt="" loading="lazy" decoding="async">
+        <span class="cat-body"><span class="cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="9" r="1.8"/><circle cx="11" cy="6" r="1.8"/><circle cx="15.5" cy="6.8" r="1.8"/><circle cx="18" cy="11" r="1.8"/><path d="M8.5 17.5c0-2.6 1.9-5 4.2-5s4.3 2.4 4.3 5c0 1.6-1.3 2.5-2.6 2.1-1.2-.4-2.2-.4-3.4 0-1.3.4-2.5-.5-2.5-2.1z"/></svg></span><h3>Wild Animal Protection</h3><span class="cat-go" aria-hidden="true">→</span></span>
+    </a>
+    <a class="cat-card rv" href="solution.html#theft"><img src="image/web/logistics-warehouse-sm.webp" alt="" loading="lazy" decoding="async">
+        <span class="cat-body"><span class="cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.4 8.4 8 9 4.6-.6 8-4 8-9V6z"/><rect x="9" y="11" width="6" height="5" rx="1"/><path d="M10 11V9.5a2 2 0 0 1 4 0V11"/></svg></span><h3>Theft &amp; Intrusion Protection</h3><span class="cat-go" aria-hidden="true">→</span></span>
+    </a>
+    <a class="cat-card rv" href="solution.html#wall-mounted"><img src="image/web/villa-fence-closeup-sm.webp" alt="" loading="lazy" decoding="async">
+        <span class="cat-body"><span class="cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10h18v10H3zM3 15h18M8 10v5M15 10v5M11.5 15v5"/><path d="M3 4.5h18M3 7h18" stroke-dasharray="2 1.5"/></svg></span><h3>Wall-Mounted Security Fence</h3><span class="cat-go" aria-hidden="true">→</span></span>
+    </a>
+    <a class="cat-card rv no-img" href="solution.html#railway"><svg class="cat-art" viewBox="0 0 300 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#A6E04A" stroke-width="2" opacity=".75"><path d="M150 18 40 160M150 18 260 160"/></g><g stroke="#8A9A8E" stroke-width="3"><path d="M138 34h24M125 52h50M110 72h80M92 96h116M70 126h160M48 156h204"/></g><g fill="none" stroke="#F4B860" stroke-width="1.4" opacity=".7"><path d="M0 60h300M0 72h300M0 84h300"/></g></svg><span class="cat-flag">Details on request</span>
+        <span class="cat-body"><span class="cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="3" width="12" height="13" rx="3"/><path d="M6 10h12M9 13.2v.01M15 13.2v.01M8.5 16 6 21M15.5 16 18 21M7 19h10"/></svg></span><h3>Railway Barricade</h3><span class="cat-go" aria-hidden="true">→</span></span>
+    </a>
+    <a class="cat-card rv" href="solution.html#steel-rope"><img src="image/web/rope-fence-1-sm.webp" alt="" loading="lazy" decoding="async">
+        <span class="cat-body"><span class="cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1"/><path d="M14 10a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1"/></svg></span><h3>Steel Rope Barricade</h3><span class="cat-go" aria-hidden="true">→</span></span>
+    </a>
+    <a class="cat-card rv" href="solution.html#solar-power-fence"><img src="image/web/7-wire-sm.webp" alt="" loading="lazy" decoding="async">
+        <span class="cat-body"><span class="cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></span><h3>Solar Power Fence</h3><span class="cat-go" aria-hidden="true">→</span></span>
+    </a>
+</div>
+        </div>
+    </section>
+
+    <section class="sec" aria-labelledby="systems-heading" style="padding-top: 0;">
         <div class="wrap">
             <div class="sec-head">
                 <p class="kicker">The systems</p>
@@ -131,19 +307,19 @@
             </div>
             <div class="sys-grid">
                 <article class="sys-card card rv">
-                    <div class="sys-img"><img src="image/7 wire.jpeg" alt="Horizontal 7-wire solar fence line" loading="lazy"></div>
+                    <div class="sys-img"><img src="image/web/7-wire.webp" srcset="image/web/7-wire-sm.webp 720w, image/web/7-wire.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Horizontal 7-wire solar fence line" loading="lazy"></div>
                     <div class="sys-body"><span class="sys-tag">The Workhorse</span><h3>Horizontal 7-Wire</h3><p>Seven strands of high-tensile galvanized wire carrying a pulsing 12V DC current. Live Post, Elephance and Spiral variants for any terrain.</p><a class="link-more" href="solution.html">Full specification</a></div>
                 </article>
                 <article class="sys-card card rv">
-                    <div class="sys-img"><img src="image/Hanging fence.png" alt="Tentacle hanging curtain solar fence" loading="lazy"></div>
+                    <div class="sys-img"><img src="image/web/hanging-fence.webp" srcset="image/web/hanging-fence-sm.webp 720w, image/web/hanging-fence.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Tentacle hanging curtain solar fence" loading="lazy"></div>
                     <div class="sys-body"><span class="sys-tag">The Elephant Stopper</span><h3>Tentacle — Hanging</h3><p>15-foot poles carry curtains of hanging stainless wires, offset for complete coverage. Approved by the central wildlife authority.</p><a class="link-more" href="solution.html">Full specification</a></div>
                 </article>
                 <article class="sys-card card rv">
-                    <div class="sys-img"><img src="image/Rope fence (1).png" alt="Rope fence installation" loading="lazy"></div>
+                    <div class="sys-img"><img src="image/web/rope-fence-1.webp" srcset="image/web/rope-fence-1-sm.webp 720w, image/web/rope-fence-1.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Rope fence installation" loading="lazy"></div>
                     <div class="sys-body"><span class="sys-tag">The Lifelong Line</span><h3>Rope Fence</h3><p>Unbreakable, lifelong, and more economical than rail fencing — for perimeters where clarity and low upkeep matter most.</p><a class="link-more" href="solution.html">Full specification</a></div>
                 </article>
                 <article class="sys-card card rv">
-                    <div class="sys-img"><img src="image/villa-fence-closeup.png" alt="Wall-top security fence close-up" loading="lazy"></div>
+                    <div class="sys-img"><img src="image/web/villa-fence-closeup.webp" srcset="image/web/villa-fence-closeup-sm.webp 720w, image/web/villa-fence-closeup.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Wall-top security fence close-up" loading="lazy"></div>
                     <div class="sys-body"><span class="sys-tag">Wall-Top &amp; Wildlife-Tuned</span><h3>Specialty Systems</h3><p>Wall-top fences for existing compounds, plus monkey and nilgai configurations with pulses tuned for smaller wildlife.</p><a class="link-more" href="solution.html">Full specification</a></div>
                 </article>
             </div>
@@ -163,10 +339,10 @@
         <div class="wrap">
             <div class="sec-head"><p class="kicker gold">Where we stand guard</p><h2 id="industries-heading" class="h-sec">Every boundary has a story.</h2></div>
             <div class="ind-rows">
-                <article class="ind-row rv"><span class="r-num">/01</span><h3>Wildlife &amp; Forest</h3><p>Bio-sensitive barriers that turn elephants and megafauna away without harm — trusted along Bandipur, Bannerghatta, Nagarhole and the Western Ghats.</p><a class="r-thumb" href="industries.html#wildlife" aria-label="Wildlife sector"><img src="image/tea-plantation-aerial.png" alt="Solar fence along a tea plantation" loading="lazy"></a></article>
-                <article class="ind-row rv"><span class="r-num">/02</span><h3>Industrial &amp; Logistics</h3><p>Active deterrence for factories, depots and supply corridors — chain-link is breached in a minute; an energized line is not.</p><a class="r-thumb" href="industries.html#industrial" aria-label="Industrial sector"><img src="image/logistics-warehouse.png" alt="Logistics warehouse perimeter" loading="lazy"></a></article>
-                <article class="ind-row rv"><span class="r-num">/03</span><h3>Government &amp; Energy</h3><p>Off-grid perimeter integrity for defense sites, substations and critical infrastructure — even during total grid failure.</p><a class="r-thumb" href="industries.html#government" aria-label="Government sector"><img src="image/government-compound.png" alt="Government compound" loading="lazy"></a></article>
-                <article class="ind-row rv"><span class="r-num">/04</span><h3>Residential &amp; Commercial</h3><p>Low-profile wall-top protection for gated communities, villas, campuses and resorts — formidable without being an eyesore.</p><a class="r-thumb" href="industries.html#residential" aria-label="Residential sector"><img src="image/villa-community-aerial.png" alt="Gated villa community" loading="lazy"></a></article>
+                <article class="ind-row rv"><span class="r-num">/01</span><h3>Wildlife &amp; Forest</h3><p>Bio-sensitive barriers that turn elephants and megafauna away without harm — trusted along Bandipur, Bannerghatta, Nagarhole and the Western Ghats.</p><a class="r-thumb" href="industries.html#wildlife" aria-label="Wildlife sector"><img src="image/web/tea-plantation-aerial.webp" srcset="image/web/tea-plantation-aerial-sm.webp 720w, image/web/tea-plantation-aerial.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Solar fence along a tea plantation" loading="lazy"></a></article>
+                <article class="ind-row rv"><span class="r-num">/02</span><h3>Industrial &amp; Logistics</h3><p>Active deterrence for factories, depots and supply corridors — chain-link is breached in a minute; an energized line is not.</p><a class="r-thumb" href="industries.html#industrial" aria-label="Industrial sector"><img src="image/web/logistics-warehouse.webp" srcset="image/web/logistics-warehouse-sm.webp 720w, image/web/logistics-warehouse.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Logistics warehouse perimeter" loading="lazy"></a></article>
+                <article class="ind-row rv"><span class="r-num">/03</span><h3>Government &amp; Energy</h3><p>Off-grid perimeter integrity for defense sites, substations and critical infrastructure — even during total grid failure.</p><a class="r-thumb" href="industries.html#government" aria-label="Government sector"><img src="image/web/government-compound.webp" srcset="image/web/government-compound-sm.webp 720w, image/web/government-compound.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Government compound" loading="lazy"></a></article>
+                <article class="ind-row rv"><span class="r-num">/04</span><h3>Residential &amp; Commercial</h3><p>Low-profile wall-top protection for gated communities, villas, campuses and resorts — formidable without being an eyesore.</p><a class="r-thumb" href="industries.html#residential" aria-label="Residential sector"><img src="image/web/villa-community-aerial.webp" srcset="image/web/villa-community-aerial-sm.webp 720w, image/web/villa-community-aerial.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Gated villa community" loading="lazy"></a></article>
             </div>
         </div>
     </section>
@@ -175,7 +351,7 @@
         <div class="wrap">
             <div class="sec-head"><p class="kicker">Field file — Delta</p><h2 id="project-heading" class="h-sec">Proven where it's hardest.</h2></div>
             <div class="proj">
-                <div class="proj-media rv" data-parallax-img><span class="badge">500-Acre Coffee Estate</span><img src="image/industrial-glowing-fence.png" alt="Drone view of a multi-kilometer solar-powered security fence" loading="lazy"></div>
+                <div class="proj-media rv" data-parallax-img><span class="badge">500-Acre Coffee Estate</span><img src="image/web/industrial-glowing-fence.webp" srcset="image/web/industrial-glowing-fence-sm.webp 720w, image/web/industrial-glowing-fence.webp 1400w" sizes="(max-width: 860px) 100vw, 50vw" alt="Drone view of a multi-kilometer solar-powered security fence" loading="lazy"></div>
                 <div class="rv">
                     <div class="proj-rows">
                         <div class="proj-row"><h4>Challenge</h4><p>Persistent elephant and megafauna intrusions — destroyed crops, heavy losses, and rising risk to human life across a 500-acre coffee estate.</p></div>
@@ -189,13 +365,95 @@
         </div>
     </section>
 
-    <section class="sec" aria-labelledby="testimonial-heading" style="padding-top: 0;">
-        <h2 id="testimonial-heading" class="sr-only">Testimonial</h2>
-        <figure class="quote rv">
+    <section id="testimonials" class="sec" aria-labelledby="testimonial-heading" style="padding-top: 0;">
+        <div class="wrap">
+            <div class="sec-head center">
+                <p class="kicker gold">Testimonials</p>
+                <h2 id="testimonial-heading" class="h-sec">What our clients say.</h2>
+            </div>
+            <div class="testi">
+        <figure class="quote card rv">
             <div class="qmark" aria-hidden="true">“</div>
             <blockquote><p>The continuous active telemetry provided by Nature Care's Fence Watch technology has redefined our facility safety layout. We have maintained complete situational awareness across our entire property outline since day one.</p></blockquote>
             <figcaption>— Chief Security Officer, National Infrastructure Manufacturing Hub</figcaption>
         </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fence planner — built from the client's requirement sheet "Solar Fencing 13-Oct-2026" pp.1-3.
+         Quantities are only computed where the sheet shows the arithmetic; prices are deliberately absent
+         until the client approves them. -->
+    <section id="estimator" class="sec" aria-labelledby="est-h" style="padding-top: 0;">
+        <div class="wrap">
+            <div class="sec-head">
+                <p class="kicker gold">Plan your fence</p>
+                <h2 id="est-h" class="h-sec">Size your fence in a minute.</h2>
+                <p class="lead">Enter your boundary details to see the materials our engineers will quote for. Final quantities and pricing are confirmed after a free site survey.</p>
+            </div>
+            <noscript><p class="note-panel card">The fence planner needs JavaScript. You can still describe your site in the assessment form below.</p></noscript>
+            <div class="est" data-estimator hidden>
+                <form class="est-panel card rv" id="est-form" novalidate aria-label="Fence planner">
+                    <fieldset>
+                        <legend>Fence category</legend>
+                        <div class="seg">
+                            <label><input type="radio" name="est-cat" value="agri" checked><span>Agri fence</span><small>Farm / estate</small></label>
+                            <label><input type="radio" name="est-cat" value="security"><span>Security fence</span><small>Wall-top fence</small></label>
+                        </div>
+                    </fieldset>
+                    <fieldset data-for="agri">
+                        <legend>Type of fence</legend>
+                        <div class="seg">
+                            <label><input type="radio" name="est-type" value="horizontal" checked><span>Horizontal fence</span></label>
+                            <label><input type="radio" name="est-type" value="tentacle"><span>Tentacle / hanging fence</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset data-for="security" hidden>
+                        <legend>Height of the post</legend>
+                        <div class="seg">
+                            <label><input type="radio" name="est-height" value="4" checked><span>4 ft</span></label>
+                            <label><input type="radio" name="est-height" value="6"><span>6 ft</span></label>
+                            <label><input type="radio" name="est-height" value="8"><span>8 ft</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset data-for="security" hidden>
+                        <legend>Distance between posts</legend>
+                        <div class="seg">
+                            <label><input type="radio" name="est-spacing" value="3" checked><span>3 m</span></label>
+                            <label><input type="radio" name="est-spacing" value="4"><span>4 m</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Your boundary</legend>
+                        <div class="num-row">
+                            <label>Boundary length <span class="unit">(m)</span><input type="number" id="est-len" inputmode="numeric" min="1" max="100000" step="1" placeholder="e.g. 1050"></label>
+                            <label data-for="agri">Number of corners<input type="number" id="est-corners" inputmode="numeric" min="0" max="1000" step="1" placeholder="e.g. 16"></label>
+                            <label>Number of wire lines<input type="number" id="est-lines" inputmode="numeric" min="1" max="30" step="1" placeholder="e.g. 7"></label>
+                        </div>
+                    </fieldset>
+                </form>
+                <div class="est-panel est-out card rv" aria-live="polite">
+                    <h3>Particulars</h3>
+                    <p class="est-sub" id="est-sub">Enter your boundary length to see your materials list.</p>
+                    <table class="est-table">
+                        <caption class="sr-only">Materials for your fence</caption>
+                        <thead><tr><th scope="col">Item</th><th scope="col">Qty</th></tr></thead>
+                        <tbody id="est-rows"></tbody>
+                    </table>
+                    <div class="est-kit">
+                        <h4>Power generation system / solar system <span class="est-sub">· 1 set, sized on survey</span></h4>
+                        <ol>
+                            <li>Solar panel</li><li>Battery</li><li>Energizer</li><li>Earth kit</li>
+                            <li>Lead-out output cable</li><li>Lightning diverter kit</li><li>Charge controller</li><li>Digital volt meter (DVM)</li>
+                        </ol>
+                    </div>
+                    <p class="est-note"><b>Indicative only.</b> Items marked “on survey” and all prices are confirmed by our engineers after a free site survey.</p>
+                    <div class="est-actions">
+                        <button type="button" class="btn btn-gold" id="est-send" disabled>Add to my assessment request <span class="arr">→</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <section id="assessment" class="sec" aria-labelledby="assessment-heading">
@@ -234,6 +492,7 @@
                     <div class="field"><label for="email-address">Email address *</label><input type="email" id="email-address" name="email-address" required autocomplete="email"></div>
                     <div class="field"><label for="phone-number">Phone number *</label><input type="tel" id="phone-number" name="phone-number" required autocomplete="tel"></div>
                 </div>
+                <div class="field"><label for="estimate-summary">Fence plan / notes (optional)</label><textarea id="estimate-summary" name="estimate-summary" rows="4" maxlength="2000" placeholder="Use the fence planner above to fill this in, or describe your site."></textarea></div>
                 <button type="submit" class="btn btn-gold" data-magnetic>Submit Assessment Request <span class="arr">→</span></button>
             </form>
         </div>
@@ -245,7 +504,7 @@
 <footer class="site-footer">
     <div class="foot-grid">
         <div class="foot-brand">
-            <img src="image/logo-holo.png" alt="Nature Care — Protection Through Innovation" loading="lazy">
+            <img src="image/logo-light.png" alt="Nature Care — Protection Through Innovation" width="130" height="130" loading="lazy">
             <p>Solar power fence solutions engineered in Karnataka and deployed across India since 2006.</p>
         </div>
         <div class="foot-col">
@@ -255,12 +514,15 @@
                 <li><a href="solution.html">Engineering Solutions</a></li>
                 <li><a href="industries.html">Sectors We Defend</a></li>
                 <li><a href="projects.html">Deployment Portfolio</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
             </ul>
         </div>
         <div class="foot-col">
             <h4>Connect</h4>
             <ul>
                 <li><a href="#assessment">Request an Assessment</a></li>
+                <li><a href="#estimator">Plan Your Fence</a></li>
                 <li>Corporate HQ: Mysore, Karnataka, India</li>
             </ul>
         </div>
@@ -316,8 +578,8 @@
     bottom: 28px;
     right: 28px;
     z-index: 9000;
-    background: linear-gradient(180deg,#FFD34D,#FFB627);
-    color: #241802;
+    background: linear-gradient(180deg,#CBF08A,#A6E04A);
+    color: #0B1A06;
     border: none;
     border-radius: 50px;
     padding: 14px 22px;
@@ -328,13 +590,13 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 6px 24px rgba(255,182,39,0.4);
+    box-shadow: 0 6px 24px rgba(166,224,74,0.4);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 #chatbot-toggle:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(255,182,39,0.5);
+    box-shadow: 0 10px 30px rgba(166,224,74,0.5);
 }
 
 #chatbot-window {
@@ -344,8 +606,8 @@
     width: 380px;
     max-height: 580px;
     z-index: 9001;
-    background: #0E1729;
-    border: 1px solid #243352;
+    background: #0E1C14;
+    border: 1px solid #2A4430;
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     display: flex;
@@ -356,6 +618,7 @@
     pointer-events: none;
     transition: opacity 0.25s ease, transform 0.25s ease;
     font-family: 'InterV', 'Inter', 'Roboto', sans-serif;
+    color-scheme: dark;
 }
 
 #chatbot-window.is-open {
@@ -365,8 +628,8 @@
 }
 
 #chatbot-header {
-    background: #0B1220;
-    border-bottom: 1px solid #243352;
+    background: #0A160F;
+    border-bottom: 1px solid #2A4430;
     padding: 16px 18px;
     display: flex;
     justify-content: space-between;
@@ -384,7 +647,7 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #FFB627, #1a7a31);
+    background: linear-gradient(135deg, #A6E04A, #1a7a31);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -402,14 +665,14 @@
 
 .chatbot-status {
     font-size: 11px;
-    color: #FFD34D;
+    color: #CBF08A;
     margin-top: 2px;
 }
 
 #chatbot-close {
     background: none;
     border: none;
-    color: #9AA7BD;
+    color: #A9B8AC;
     font-size: 18px;
     cursor: pointer;
     padding: 4px 8px;
@@ -431,7 +694,7 @@
 
 #chatbot-messages::-webkit-scrollbar { width: 4px; }
 #chatbot-messages::-webkit-scrollbar-track { background: transparent; }
-#chatbot-messages::-webkit-scrollbar-thumb { background: #243352; border-radius: 4px; }
+#chatbot-messages::-webkit-scrollbar-thumb { background: #2A4430; border-radius: 4px; }
 
 .chat-msg {
     max-width: 88%;
@@ -447,17 +710,17 @@
 
 .chat-msg.bot {
     align-self: flex-start;
-    background: #16213A;
-    color: #DCE4F2;
+    background: #14271B;
+    color: #E6EEE3;
     padding: 12px 16px;
     border-radius: 4px 16px 16px 16px;
-    border: 1px solid #243352;
+    border: 1px solid #2A4430;
 }
 
 .chat-msg.user {
     align-self: flex-end;
-    background: #FFB627;
-    color: #241802;
+    background: #A6E04A;
+    color: #0B1A06;
     padding: 12px 16px;
     border-radius: 16px 4px 16px 16px;
 }
@@ -465,11 +728,11 @@
 .chat-msg.quote-card {
     align-self: stretch;
     max-width: 100%;
-    background: #0B1220;
-    border: 1px solid #243352;
+    background: #0A160F;
+    border: 1px solid #2A4430;
     border-radius: 12px;
     padding: 20px;
-    color: #DCE4F2;
+    color: #E6EEE3;
 }
 
 .quote-card .tier-badge {
@@ -485,7 +748,7 @@
 .tier-bronze .tier-badge { background: rgba(205,127,50,0.2); color: #CD7F32; border: 1px solid #CD7F32; }
 .tier-silver .tier-badge { background: rgba(160,160,160,0.2); color: #A0A0A0; border: 1px solid #A0A0A0; }
 .tier-gold   .tier-badge { background: rgba(212,175,55,0.2); color: #D4AF37; border: 1px solid #D4AF37; }
-.tier-diamond .tier-badge { background: rgba(61,220,111,0.15); color: #FFD34D; border: 1px solid #FFD34D; }
+.tier-diamond .tier-badge { background: rgba(61,220,111,0.15); color: #CBF08A; border: 1px solid #CBF08A; }
 
 .quote-card .quote-price {
     font-size: 28px;
@@ -498,15 +761,15 @@
 .quote-card .quote-price span {
     font-size: 15px;
     font-weight: 500;
-    color: #9AA7BD;
+    color: #A9B8AC;
 }
 
 .quote-card .quote-detail {
     font-size: 12px;
-    color: #9AA7BD;
+    color: #A9B8AC;
     margin-bottom: 16px;
     padding-bottom: 16px;
-    border-bottom: 1px solid #243352;
+    border-bottom: 1px solid #2A4430;
 }
 
 .quote-card .feature-list {
@@ -519,7 +782,7 @@
 
 .quote-card .feature-list li {
     font-size: 13px;
-    color: #DCE4F2;
+    color: #E6EEE3;
     display: flex;
     align-items: flex-start;
     gap: 8px;
@@ -527,7 +790,7 @@
 
 .quote-card .feature-list li::before {
     content: '✓';
-    color: #FFD34D;
+    color: #CBF08A;
     font-weight: 700;
     flex-shrink: 0;
     margin-top: 1px;
@@ -537,8 +800,8 @@
     display: block;
     width: 100%;
     padding: 12px;
-    background: #FFB627;
-    color: #241802;
+    background: #A6E04A;
+    color: #0B1A06;
     border: none;
     border-radius: 8px;
     font-size: 14px;
@@ -549,12 +812,12 @@
     font-family: 'InterV', 'Inter', sans-serif;
 }
 
-.quote-card .quote-cta:hover { background: #E09A0E; }
+.quote-card .quote-cta:hover { background: #8CCB2A; }
 
 .chat-typing {
     align-self: flex-start;
-    background: #16213A;
-    border: 1px solid #243352;
+    background: #14271B;
+    border: 1px solid #2A4430;
     border-radius: 4px 16px 16px 16px;
     padding: 14px 18px;
     display: flex;
@@ -565,7 +828,7 @@
 .chat-typing span {
     width: 7px;
     height: 7px;
-    background: #9AA7BD;
+    background: #A9B8AC;
     border-radius: 50%;
     animation: typingDot 1.4s infinite ease-in-out;
 }
@@ -579,10 +842,10 @@
 }
 
 #chatbot-input-area {
-    border-top: 1px solid #243352;
+    border-top: 1px solid #2A4430;
     padding: 14px;
     flex-shrink: 0;
-    background: #0B1220;
+    background: #0A160F;
 }
 
 #chatbot-options {
@@ -592,9 +855,9 @@
 }
 
 .chat-option-btn {
-    background: #16213A;
-    border: 1px solid #243352;
-    color: #DCE4F2;
+    background: #14271B;
+    border: 1px solid #2A4430;
+    color: #E6EEE3;
     padding: 10px 14px;
     border-radius: 8px;
     font-size: 13px;
@@ -606,8 +869,8 @@
 }
 
 .chat-option-btn:hover {
-    background: #243352;
-    border-color: #FFB627;
+    background: #2A4430;
+    border-color: #A6E04A;
     color: #fff;
 }
 
@@ -618,8 +881,8 @@
 
 #chatbot-text-input {
     flex: 1;
-    background: #16213A;
-    border: 1px solid #243352;
+    background: #14271B;
+    border: 1px solid #2A4430;
     border-radius: 8px;
     padding: 10px 14px;
     font-size: 14px;
@@ -629,41 +892,41 @@
 }
 
 #chatbot-text-input:focus {
-    border-color: #FFB627;
+    border-color: #A6E04A;
 }
 
-#chatbot-text-input::placeholder { color: #9AA7BD; }
+#chatbot-text-input::placeholder { color: #A9B8AC; }
 
 #chatbot-send {
-    background: #FFB627;
+    background: #A6E04A;
     border: none;
     border-radius: 8px;
-    color: #fff;
+    color: #0B1A06;
     width: 42px;
     font-size: 18px;
     cursor: pointer;
     transition: background 0.2s ease;
 }
 
-#chatbot-send:hover { background: #E09A0E; }
+#chatbot-send:hover { background: #8CCB2A; }
 
 /* Upgrade prompt */
 .upgrade-row {
     margin-top: 14px;
     padding-top: 14px;
-    border-top: 1px solid #243352;
+    border-top: 1px solid #2A4430;
 }
 
 .upgrade-row p {
     font-size: 12px;
-    color: #9AA7BD;
+    color: #A9B8AC;
     margin-bottom: 8px;
 }
 
 .upgrade-btn {
     background: none;
-    border: 1px solid #243352;
-    color: #DCE4F2;
+    border: 1px solid #2A4430;
+    color: #E6EEE3;
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 12px;
@@ -674,7 +937,7 @@
     transition: border-color 0.2s ease;
 }
 
-.upgrade-btn:hover { border-color: #FFB627; color: #fff; }
+.upgrade-btn:hover { border-color: #A6E04A; color: #fff; }
 
 @media (max-width: 480px) {
     #chatbot-window {
@@ -1007,11 +1270,13 @@
 })();
 </script>
 
+
 <script type="importmap">{ "imports": { "three": "./vendor/three/three.module.min.js" } }</script>
 <script src="vendor/gsap.min.js"></script>
 <script src="vendor/ScrollTrigger.min.js"></script>
 <script src="vendor/lenis.min.js"></script>
 <script src="js/main.js"></script>
-<script type="module" src="js/scene.js"></script>
+<script src="js/estimator.js"></script>
+<script type="module" src="js/scene-boot.js"></script>
 </body>
 </html>

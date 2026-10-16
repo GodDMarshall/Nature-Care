@@ -1,6 +1,7 @@
 /* ============================================================================
-   NATURE CARE — INTERACTIONS (v8)
-   Drives the 3D camera story from scroll, plus reveals / counters / nav.
+   NATURE CARE — INTERACTIONS (v9)
+   Drives the 3D camera story from scroll, plus reveals / counters / nav,
+   hero photo depth, and the mobile menu's keyboard behaviour.
    ============================================================================ */
 (function () {
     'use strict';
@@ -17,6 +18,7 @@
     var lenis = null;
     if (!reduced && typeof Lenis !== 'undefined') {
         lenis = new Lenis({ duration: 1.1, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
+        window.__lenis = lenis; // QA / debugging handle
         lenis.on('scroll', function () { if (hasGsap) ScrollTrigger.update(); });
         if (hasGsap) { gsap.ticker.add(function (time) { lenis.raf(time * 1000); }); gsap.ticker.lagSmoothing(0); }
         else { (function raf(time) { lenis.raf(time); requestAnimationFrame(raf); })(); }
@@ -51,14 +53,25 @@
     }
 
     /* anchors */
+    function scrollToEl(el) {
+        if (lenis) lenis.scrollTo(el, { offset: -70 }); else el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+    }
+    window.NC_scrollTo = scrollToEl;
     document.querySelectorAll('a[href^="#"]').forEach(function (a) {
         a.addEventListener('click', function (e) {
-            var el = document.getElementById(a.getAttribute('href').slice(1));
+            var id = a.getAttribute('href').slice(1);
+            var el = id && document.getElementById(id);
             if (!el) return;
             e.preventDefault(); closeMenu();
-            if (lenis) lenis.scrollTo(el, { offset: -70 }); else el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+            scrollToEl(el);
+            if (id === 'main') { el.setAttribute('tabindex', '-1'); el.focus({ preventScroll: true }); }
         });
     });
+    // arriving from another page with a hash (e.g. index.html#testimonials): let layout settle, then land precisely
+    if (location.hash.length > 1) {
+        var hashEl = document.getElementById(location.hash.slice(1));
+        if (hashEl) window.addEventListener('load', function () { setTimeout(function () { if (lenis) lenis.scrollTo(hashEl, { offset: -70, immediate: true }); else hashEl.scrollIntoView(); }, 60); });
+    }
 
     /* nav */
     var nav = document.querySelector('.site-nav');
@@ -67,10 +80,17 @@
     if (lenis) lenis.on('scroll', onScrollNav);
     onScrollNav();
     var burger = document.getElementById('burger');
-    function closeMenu() { if (!body.classList.contains('menu-open')) return; body.classList.remove('menu-open'); if (burger) burger.setAttribute('aria-expanded', 'false'); if (lenis) lenis.start(); }
+    function closeMenu() { if (!body.classList.contains('menu-open')) return; body.classList.remove('menu-open'); if (burger) { burger.setAttribute('aria-expanded', 'false'); burger.setAttribute('aria-label', 'Open menu'); } if (lenis) lenis.start(); }
     if (burger) {
-        burger.addEventListener('click', function () { var open = body.classList.toggle('menu-open'); burger.setAttribute('aria-expanded', String(open)); if (lenis) { open ? lenis.stop() : lenis.start(); } });
+        burger.addEventListener('click', function () {
+            var open = body.classList.toggle('menu-open');
+            burger.setAttribute('aria-expanded', String(open));
+            burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+            if (lenis) { open ? lenis.stop() : lenis.start(); }
+            if (open) { var first = document.querySelector('#mobile-menu a'); if (first) setTimeout(function () { first.focus(); }, 60); }
+        });
         document.querySelectorAll('#mobile-menu a').forEach(function (a, i) { a.style.transitionDelay = (0.05 + i * 0.05) + 's'; a.addEventListener('click', closeMenu); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && body.classList.contains('menu-open')) { closeMenu(); burger.focus(); } });
     }
 
     /* hero intro */
@@ -106,6 +126,15 @@
     if (hasGsap && !reduced) document.querySelectorAll('[data-parallax-img] img').forEach(function (img) {
         gsap.fromTo(img, { yPercent: -7 }, { yPercent: 7, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: 0.5 } });
     });
+
+    /* hero photo depth: the landscape drifts slower than the fence in front of it */
+    var stagePhoto = document.querySelector('[data-stage-photo] img');
+    if (stagePhoto && hasGsap && !reduced) {
+        gsap.fromTo(stagePhoto, { yPercent: 0, scale: 1.06 }, { yPercent: 5, scale: 1.14, ease: 'none', scrollTrigger: { trigger: '.story', start: 'top top', end: 'bottom bottom', scrub: 0.6 } });
+        if (!isTouch) window.addEventListener('pointermove', function (e) {
+            gsap.to(stagePhoto.parentElement, { x: (e.clientX / window.innerWidth - 0.5) * -14, y: (e.clientY / window.innerHeight - 0.5) * -8, duration: 1.2, ease: 'power3.out', overwrite: 'auto' });
+        }, { passive: true });
+    }
 
     /* magnetic buttons */
     if (!isTouch && !reduced && hasGsap) document.querySelectorAll('[data-magnetic]').forEach(function (el) {
