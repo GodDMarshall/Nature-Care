@@ -54,7 +54,7 @@
 
 /* 2. BASE */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { overflow-x: clip; background: var(--bg); scrollbar-color: rgba(166,224,74,.35) transparent; }
+html { overflow-x: hidden; overflow-x: clip; background: var(--bg); scrollbar-color: rgba(166,224,74,.35) transparent; }
 body {
     font-family: var(--font-b); font-size: 17px; line-height: 1.7; color: var(--ink);
     background:
@@ -498,3 +498,23 @@ html.no-js .rv, html.reduced .rv { opacity: 1; transform: none; }
     *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
     .fb-pulse { stroke-dasharray: none; stroke-dashoffset: 0; opacity: .5; }
 }
+
+/* 11. CALL NOW + POWER SET PRICES (requirement sheet pp.2–3) */
+.call-now { display: inline-flex; align-items: center; gap: 8px; flex: none; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid rgba(242,246,238,0.35); color: var(--ink); font-weight: 600; font-size: 14.5px; background: rgba(7,17,12,0.35); transition: border-color .3s, color .3s; }
+.call-now svg { width: 18px; height: 18px; color: var(--lime); }
+.call-now:hover, .call-now:focus-visible { border-color: var(--lime); color: var(--lime-soft); }
+.site-nav .nav-links { margin-left: auto; }
+@media (max-width: 1180px) { .site-nav .call-now { margin-left: auto; } }
+@media (max-width: 520px) { .call-now { padding: 0; width: 44px; justify-content: center; } .call-now span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
+.status-page .btn + .btn { margin-left: 12px; }
+.est-kit-price { margin-top: 10px; font-size: 14px; color: var(--dim); }
+.est-kit-price b { color: var(--lime); font-size: 18px; font-family: var(--font-d); margin-right: 4px; }
+.set-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 14px; }
+.set-card { padding: 24px; }
+.set-name { font-weight: 650; font-size: 16px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.set-name span { color: var(--faint); font-weight: 500; font-size: 14px; }
+.set-price { font-family: var(--font-d); font-size: clamp(1.9rem, 3vw, 2.4rem); font-weight: 600; color: var(--lime); margin: 10px 0 8px; }
+.set-price.set-survey { color: var(--sun); }
+.set-spec { color: var(--dim); font-size: 14.5px; }
+.set-note { color: var(--faint); font-size: 13.5px; margin-bottom: 28px; }
+@media (max-width: 900px) { .set-grid { grid-template-columns: 1fr; } }

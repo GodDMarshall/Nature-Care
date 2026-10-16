@@ -36,6 +36,7 @@
         <a href="#testimonials">Testimonials</a>
         <a href="#assessment" class="btn btn-gold" data-magnetic>Request Assessment</a>
     </nav>
+    <a class="call-now" href="tel:+919845571328" aria-label="Call Now: 98455 71328"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span>Call Now</span></a>
     <button id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><i></i><i></i></button>
 </header>
 
@@ -47,6 +48,7 @@
     <a href="gallery.html"><span>05</span> Gallery</a>
     <a href="#testimonials"><span>06</span> Testimonials</a>
     <a href="#assessment"><span>07</span> Request Assessment</a>
+    <a href="tel:+919845571328"><span>08</span> Call Now · 98455 71328</a>
     <p class="menu-meta">Mysore, Karnataka — Since 2006<br>Protection Through Innovation</p>
 </div>
 
@@ -441,15 +443,17 @@
                         <tbody id="est-rows"></tbody>
                     </table>
                     <div class="est-kit">
-                        <h4>Power generation system / solar system <span class="est-sub">· 1 set, sized on survey</span></h4>
+                        <h4>Power generation system / solar system <span class="est-sub" id="est-kit-sub">· 1 set, sized to your boundary</span></h4>
+                        <p class="est-kit-price" id="est-kit-price" hidden></p>
                         <ol>
                             <li>Solar panel</li><li>Battery</li><li>Energizer</li><li>Earth kit</li>
                             <li>Lead-out output cable</li><li>Lightning diverter kit</li><li>Charge controller</li><li>Digital volt meter (DVM)</li>
                         </ol>
                     </div>
-                    <p class="est-note"><b>Indicative only.</b> Items marked “on survey” and all prices are confirmed by our engineers after a free site survey.</p>
+                    <p class="est-note"><b>Indicative only.</b> Items marked “on survey”, and fence material prices, are confirmed by our engineers after a free site survey.</p>
                     <div class="est-actions">
                         <button type="button" class="btn btn-gold" id="est-send" disabled>Add to my assessment request <span class="arr">→</span></button>
+                        <a class="btn btn-ghost" href="tel:+919845571328">Call Now · 98455 71328</a>
                     </div>
                 </div>
             </div>
@@ -523,6 +527,7 @@
             <ul>
                 <li><a href="#assessment">Request an Assessment</a></li>
                 <li><a href="#estimator">Plan Your Fence</a></li>
+                <li><a href="tel:+919845571328">Call Now: 98455 71328</a></li>
                 <li>Corporate HQ: Mysore, Karnataka, India</li>
             </ul>
         </div>
@@ -745,10 +750,7 @@
     margin-bottom: 14px;
 }
 
-.tier-bronze .tier-badge { background: rgba(205,127,50,0.2); color: #CD7F32; border: 1px solid #CD7F32; }
-.tier-silver .tier-badge { background: rgba(160,160,160,0.2); color: #A0A0A0; border: 1px solid #A0A0A0; }
-.tier-gold   .tier-badge { background: rgba(212,175,55,0.2); color: #D4AF37; border: 1px solid #D4AF37; }
-.tier-diamond .tier-badge { background: rgba(61,220,111,0.15); color: #CBF08A; border: 1px solid #CBF08A; }
+.quote-card .tier-badge { background: rgba(166,224,74,0.14); color: #CBF08A; border: 1px solid rgba(166,224,74,0.6); }
 
 .quote-card .quote-price {
     font-size: 28px;
@@ -952,144 +954,21 @@
 }
 </style>
 
+<script src="js/prices.js"></script>
 <script>
 (function() {
     // ============================================================
-    // NATURE CARE SOLAR FENCING PRICING ENGINE
-    // Packages: Bronze / Silver / Gold / Diamond
-    // Price = base per-meter rate × perimeter length + setup fee
-    // All prices in INR. Client can adjust RATES below.
+    // NATURE CARE PRICING ASSISTANT
+    // Quotes only the approved power-set prices from the 13-Oct-2026
+    // requirement sheet (js/prices.js): Set I ₹28,000, Set II
+    // (500–1,000 m) ₹37,000. Longer fences and all fence materials
+    // are priced after a site survey.
     // ============================================================
 
-    const PACKAGES = {
-        bronze: {
-            name: 'Bronze',
-            tagline: 'Essential Residential Protection',
-            ratePerMeter: 120,       // ₹ per meter installed
-            setupFee: 8000,          // one-time setup/survey
-            minMeters: 50,
-            maxMeters: 600,
-            height: '1.5m (5 ft)',
-            strands: '3-strand GI wire',
-            energizer: '2J Solar Energizer',
-            monitoring: 'Manual voltage indicator',
-            warranty: '1 year',
-            sla: 'Standard support',
-            features: [
-                '2 Joule solar energizer (covers up to 600m)',
-                '1.5 meter galvanized steel posts @ 3m spacing',
-                '3-strand high-tensile GI wire',
-                'Manual voltage indicator panel',
-                'Basic lightning protection',
-                '1-year parts warranty',
-                'Installation & commissioning included',
-            ],
-            bestFor: 'Small residential plots, farm houses, small gardens',
-            color: '#CD7F32',
-        },
-        silver: {
-            name: 'Silver',
-            tagline: 'Advanced Residential & Small Farm',
-            ratePerMeter: 195,
-            setupFee: 14000,
-            minMeters: 400,
-            maxMeters: 2000,
-            height: '1.8m (6 ft)',
-            strands: '5-strand GI wire',
-            energizer: '5J Solar Energizer',
-            monitoring: 'Digital display + SMS alert',
-            warranty: '2 years',
-            sla: 'Priority support (48hr response)',
-            features: [
-                '5 Joule solar energizer (covers up to 2km)',
-                '1.8 meter heavy-duty galvanized posts',
-                '5-strand high-tensile GI wire',
-                'Digital voltage display panel',
-                'GSM SMS alert on fault or intrusion',
-                '72-hour battery backup',
-                'Lightning & surge protection',
-                '2-year parts + labor warranty',
-                'Quarterly maintenance visit (Year 1)',
-            ],
-            bestFor: 'Large residential, small farms, plantation boundaries',
-            color: '#A0A0A0',
-        },
-        gold: {
-            name: 'Gold',
-            tagline: 'Commercial & Agricultural Grade',
-            ratePerMeter: 320,
-            setupFee: 28000,
-            minMeters: 1500,
-            maxMeters: 10000,
-            height: '2.1m (7 ft)',
-            strands: '7-strand GI wire',
-            energizer: '10J Industrial Energizer',
-            monitoring: 'Multi-zone GSM + app alerts',
-            warranty: '3 years',
-            sla: 'Priority support (24hr response)',
-            features: [
-                '10 Joule industrial-grade solar energizer',
-                '2.1 meter schedule-40 hot-dip galvanized posts',
-                '7-strand high-tensile GI wire with barbed top',
-                'Multi-zone fault isolation (up to 10 zones)',
-                'Real-time GSM alerts + mobile app dashboard',
-                '5-day battery backup with MPPT controller',
-                'Full lightning + surge protection array',
-                'CCTV integration-ready junction boxes',
-                '3-year comprehensive parts + labor warranty',
-                'Bi-annual maintenance for 3 years',
-            ],
-            bestFor: 'Farms, warehouses, commercial properties, tea estates',
-            color: '#D4AF37',
-        },
-        diamond: {
-            name: 'Diamond',
-            tagline: 'Industrial & Government Grade',
-            ratePerMeter: 520,
-            setupFee: 55000,
-            minMeters: 5000,
-            maxMeters: 999999,
-            height: '2.4m (8 ft)',
-            strands: '9-strand GI wire + barbed',
-            energizer: '20J+ Multi-unit System',
-            monitoring: 'IoT dashboard + 24/7 NOC',
-            warranty: '5 years',
-            sla: '24/7 dedicated support (4hr response SLA)',
-            features: [
-                '20J+ multi-unit solar energizer system',
-                '2.4 meter military-spec hot-dip galvanized posts',
-                '9-strand high-tensile GI wire + concertina top',
-                'Unlimited zone monitoring with GPS mapping',
-                'IoT cloud dashboard with real-time telemetry',
-                'Automated breach reporting to central command',
-                '7-day battery backup + grid hybrid failover',
-                'Thermal & IR camera integration',
-                'SCADA / BMS integration available',
-                '5-year all-inclusive warranty',
-                'Dedicated account manager + quarterly audits',
-                'ISO 9001:2015 certified installation',
-            ],
-            bestFor: 'Solar farms, government facilities, forest reserves, large industrial complexes',
-            color: '#FFD34D',
-        },
-    };
-
-    // Property type → recommended package mapping
-    const PROPERTY_MAP = {
-        'Small house / plot (under 500m boundary)': 'bronze',
-        'Large house / villa / farmhouse': 'silver',
-        'Farm / plantation / estate': 'gold',
-        'Commercial / industrial / warehouse': 'gold',
-        'Solar farm / government / forest': 'diamond',
-    };
+    const PR = window.NC_PRICES;
 
     // State
-    let state = {
-        step: 'welcome',
-        propertyType: null,
-        meters: null,
-        recommendedPackage: null,
-    };
+    let state = { step: 'welcome', meters: null };
 
     const win = document.getElementById('chatbot-window');
     const toggleBtn = document.getElementById('chatbot-toggle');
@@ -1122,8 +1001,9 @@
         textInput.value = '';
         addUserMsg(`${val.toLocaleString('en-IN')} meters`);
         state.meters = val;
+        state.step = 'quoted';
         textRow.style.display = 'none';
-        showTyping(1000).then(() => showQuote(state.recommendedPackage, val));
+        showTyping(900).then(() => showQuote(val));
     }
 
     function addBotMsg(html, extraClass = '') {
@@ -1165,104 +1045,63 @@
         });
     }
 
+    function goToAssessment() {
+        if (window.NC_scrollTo) window.NC_scrollTo(document.getElementById('assessment'));
+        else document.getElementById('assessment')?.scrollIntoView({ behavior: 'smooth' });
+        win.classList.remove('is-open');
+        win.setAttribute('aria-hidden', 'true');
+    }
+
     function startChat() {
-        state = { step: 'welcome', propertyType: null, meters: null, recommendedPackage: null };
+        state = { step: 'asked', meters: null };
         messagesEl.innerHTML = '';
         optionsEl.innerHTML = '';
         textRow.style.display = 'none';
 
         setTimeout(() => {
-            addBotMsg('👋 Welcome to <strong>Nature Care</strong>! I\'ll help you find the right solar fencing package and give you an instant price estimate.');
+            addBotMsg('👋 Welcome to <strong>Nature Care</strong>! I can give you the price of the solar power system for your fence.');
         }, 200);
 
         setTimeout(() => {
-            addBotMsg('What type of property do you want to protect?');
-            showOptions(Object.keys(PROPERTY_MAP).map(label => ({
-                label,
-                onClick: () => selectPropertyType(label),
-            })));
+            addBotMsg('How long is your property boundary? Enter the perimeter in <strong>meters</strong>.<br><small style="color:#9AA7BD">Not sure? Estimate: a 1-acre square plot ≈ 400m, 5 acres ≈ 900m, 10 acres ≈ 1,270m</small>');
+            textRow.style.display = 'flex';
+            textInput.focus();
         }, 900);
     }
 
-    function selectPropertyType(type) {
-        addUserMsg(type);
-        state.propertyType = type;
-        state.recommendedPackage = PROPERTY_MAP[type];
-        optionsEl.innerHTML = '';
-
-        showTyping(900).then(() => {
-            const pkg = PACKAGES[state.recommendedPackage];
-            addBotMsg(`Based on your property type, I recommend our <strong style="color:${pkg.color}">${pkg.name} Package</strong> — ${pkg.tagline}.`);
-
-            setTimeout(() => {
-                addBotMsg('How long is your property boundary? Enter the perimeter in <strong>meters</strong>.<br><small style="color:#9AA7BD">Not sure? Estimate: a 1-acre square plot ≈ 400m, 5 acres ≈ 900m, 10 acres ≈ 1,270m</small>');
-                textRow.style.display = 'flex';
-                textInput.focus();
-            }, 700);
-        });
+    function kitList(set) {
+        return PR.kit.map((item, i) => `<li>${(set && set.spec[i] && i < 3) ? set.spec[i] : item}</li>`).join('');
     }
 
-    function formatINR(amount) {
-        return '₹' + amount.toLocaleString('en-IN');
-    }
-
-    function showQuote(pkgKey, meters) {
-        const pkg = PACKAGES[pkgKey];
-        const lineTotal = pkg.ratePerMeter * meters;
-        const total = lineTotal + pkg.setupFee;
-        const gst = Math.round(total * 0.18);
-        const grandTotal = total + gst;
-
+    function showQuote(meters) {
+        const set = PR.setFor(meters);
         const card = document.createElement('div');
-        card.className = `chat-msg quote-card tier-${pkgKey}`;
-        card.innerHTML = `
-            <span class="tier-badge">🏅 ${pkg.name.toUpperCase()} PACKAGE</span>
-            <div style="font-size:13px;color:#9AA7BD;margin-bottom:6px;">${pkg.tagline}</div>
-            <div class="quote-price">${formatINR(grandTotal)} <span>incl. 18% GST</span></div>
-            <div class="quote-detail">
-                ${formatINR(pkg.ratePerMeter)}/meter × ${meters.toLocaleString('en-IN')}m = ${formatINR(lineTotal)}<br>
-                + Survey & Setup: ${formatINR(pkg.setupFee)}<br>
-                + GST (18%): ${formatINR(gst)}<br>
-                <strong style="color:#DCE4F2">Total before negotiation: ${formatINR(grandTotal)}</strong>
-            </div>
-            <ul class="feature-list">
-                ${pkg.features.map(f => `<li>${f}</li>`).join('')}
-            </ul>
-            <div style="font-size:12px;color:#9AA7BD;margin-bottom:14px;">
-                🏗 Height: ${pkg.height} &nbsp;|&nbsp; 
-                🔌 ${pkg.energizer} &nbsp;|&nbsp; 
-                🛡 ${pkg.warranty} warranty
-            </div>
-            <button class="quote-cta" onclick="document.getElementById('assessment').scrollIntoView({behavior:'smooth'}); document.getElementById('chatbot-window').classList.remove('is-open');">
-                Request Formal Quote →
-            </button>
-            <div class="upgrade-row">
-                <p>Want to compare other packages?</p>
-                ${Object.keys(PACKAGES).filter(k => k !== pkgKey).map(k =>
-                    `<button class="upgrade-btn" data-pkg="${k}">View ${PACKAGES[k].name}</button>`
-                ).join('')}
-            </div>
-        `;
+        card.className = 'chat-msg quote-card';
+        if (set) {
+            card.innerHTML = `
+                <span class="tier-badge">⚡ POWER SYSTEM · ${set.name.toUpperCase()}</span>
+                <div style="font-size:13px;color:#9AA7BD;margin-bottom:6px;">${set.band} boundary</div>
+                <div class="quote-price">${PR.inr(set.price)} <span>power generation system</span></div>
+                <div class="quote-detail">For your ${meters.toLocaleString('en-IN')} m boundary.</div>
+                <ul class="feature-list">${kitList(set)}</ul>
+                <div style="font-size:12px;color:#9AA7BD;margin-bottom:14px;">Fence materials (posts, wire, insulators) are quoted after a free site survey.</div>
+                <button class="quote-cta" type="button">Request Formal Quote →</button>`;
+        } else {
+            card.innerHTML = `
+                <span class="tier-badge">⚡ POWER SYSTEM · ON SURVEY</span>
+                <div class="quote-detail">A ${meters.toLocaleString('en-IN')} m boundary is longer than our standard sets (up to 1,000 m), so our engineers size and price the power system on site.</div>
+                <ul class="feature-list">${kitList(null)}</ul>
+                <button class="quote-cta" type="button">Request a Free Site Survey →</button>`;
+        }
+        card.querySelector('.quote-cta').addEventListener('click', goToAssessment);
         messagesEl.appendChild(card);
         messagesEl.scrollTop = messagesEl.scrollHeight;
 
-        // Wire up compare buttons
-        card.querySelectorAll('.upgrade-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const newPkg = btn.getAttribute('data-pkg');
-                addUserMsg(`Show me ${PACKAGES[newPkg].name} package`);
-                showTyping(600).then(() => showQuote(newPkg, state.meters));
-            });
-        });
-
         setTimeout(() => {
-            addBotMsg('💡 This is an <strong>estimated price</strong>. Final pricing depends on site survey, terrain, and access conditions. Click "Request Formal Quote" above to connect with our team for an exact figure.');
+            addBotMsg(`💡 Want to talk it through? Call us on <a href="tel:${PR.callNow.tel}" style="color:#A6E04A">${PR.callNow.label}</a>.`);
             showOptions([
-                { label: '🔄 Start over with different property', onClick: startChat },
-                { label: '📞 Connect with our team', onClick: () => {
-                    document.getElementById('assessment')?.scrollIntoView({ behavior: 'smooth' });
-                    win.classList.remove('is-open');
-                }},
+                { label: '🔄 Try a different length', onClick: startChat },
+                { label: '📞 Connect with our team', onClick: goToAssessment },
             ]);
         }, 600);
     }

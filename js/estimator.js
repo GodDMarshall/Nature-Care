@@ -7,8 +7,8 @@
         post spacing 3/4 m → particulars p.2
    Quantities are only computed where the sheet shows the arithmetic
    (p.2: 150 m ÷ 3 m = 50 intermediate posts; 150 m × 8 lines = 1,200 m HT wire).
-   Everything else is "on survey". No prices: they are not approved for
-   publication. The planner never submits anything itself — it only fills the
+   Everything else is "on survey". The only prices shown are the approved
+   power-set prices from p.3 (js/prices.js). The planner never submits anything itself — it only fills the
    existing assessment form (POST /submit-assessment).
    ========================================================================== */
 (function () {
@@ -24,6 +24,9 @@
     var rowsEl = document.getElementById('est-rows');
     var subEl = document.getElementById('est-sub');
     var sendBtn = document.getElementById('est-send');
+    var kitSubEl = document.getElementById('est-kit-sub');
+    var kitPriceEl = document.getElementById('est-kit-price');
+    var PR = window.NC_PRICES || null;
     var fmt = function (n) { return n.toLocaleString('en-IN'); };
 
     function val(name) { var el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : null; }
@@ -65,7 +68,29 @@
                 ['High tensile (H.T.) wire', wire ? { q: fmt(wire) + ' m', basis: fmt(L) + ' m × ' + lines + ' lines' } : onSurvey()]
             ];
         }
+        plan.power = PR && L > 0 ? PR.setFor(L) : null;
         return plan;
+    }
+
+    function renderKit(plan) {
+        if (!kitSubEl || !kitPriceEl) return;
+        if (!PR || !(plan.L > 0)) {
+            kitSubEl.textContent = '· 1 set, sized to your boundary';
+            kitPriceEl.hidden = true;
+            return;
+        }
+        kitPriceEl.hidden = false;
+        if (plan.power) {
+            kitSubEl.textContent = '· ' + plan.power.name + ' (' + plan.power.band.toLowerCase() + ')';
+            kitPriceEl.innerHTML = '';
+            var b = document.createElement('b'); b.textContent = PR.inr(plan.power.price);
+            kitPriceEl.appendChild(b);
+            kitPriceEl.appendChild(document.createTextNode(' for the power generation system' +
+                (plan.power.spec.length ? ' (' + plan.power.spec.join(', ') + ')' : '') + '.'));
+        } else {
+            kitSubEl.textContent = '· sized on survey';
+            kitPriceEl.textContent = 'Boundaries over 1,000 m need a power system sized and priced on survey.';
+        }
     }
 
     function render() {
@@ -85,6 +110,7 @@
         else if (!plan.L) subEl.textContent = 'Enter your boundary length to see your materials list.';
         else subEl.textContent = (cat === 'agri' ? 'Agri fence · ' + plan.type : 'Security fence · wall-top') + ' · ' + fmt(plan.L) + ' m boundary';
         sendBtn.disabled = bad || !plan.L;
+        renderKit(bad ? {} : plan);
         return plan;
     }
 
@@ -102,6 +128,8 @@
             if (plan.posts) out.push('Indicative intermediate posts: ' + fmt(plan.posts) + ' nos');
             if (plan.wire) out.push('Indicative H.T. wire: ' + fmt(plan.wire) + ' m');
         }
+        if (plan.power) out.push('Power generation system: ' + plan.power.name + ' (' + plan.power.band + '), ' + PR.inr(plan.power.price));
+        else if (PR) out.push('Power generation system: sized on survey');
         return out.join('\n');
     }
 
