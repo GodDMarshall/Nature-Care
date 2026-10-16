@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assessment Request Received | Nature Care</title>
+<style>
+    :root {
+        --primary-green: #27AE46;
+        --dark-charcoal: #2F3542;
+        --grey: #6B7280;
+        --light-grey: #F5F7FA;
+        --white: #FFFFFF;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Roboto', 'Open Sans', sans-serif;
+        background: linear-gradient(135deg, var(--dark-charcoal) 0%, #1c2026 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .card {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 60px 50px;
+        max-width: 480px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 10;
+        animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    @keyframes cardIn {
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    /* Animated Checkmark Circle */
+    .check-wrapper {
+        width: 110px;
+        height: 110px;
+        margin: 0 auto 30px;
+    }
+
+    .check-circle {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: var(--primary-green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+        opacity: 0;
+        transform: scale(0.5);
+        box-shadow: 0 0 0 0 rgba(39, 174, 70, 0.4);
+    }
+
+    @keyframes popIn {
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .check-circle::after {
+        content: '';
+        position: absolute;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        border: 2px solid var(--primary-green);
+        animation: ringPulse 1.6s ease-out 0.8s infinite;
+    }
+
+    @keyframes ringPulse {
+        0% {
+            transform: scale(1);
+            opacity: 0.6;
+        }
+        100% {
+            transform: scale(1.6);
+            opacity: 0;
+        }
+    }
+
+    .checkmark {
+        width: 50px;
+        height: 50px;
+    }
+
+    .checkmark path {
+        stroke: var(--white);
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        animation: drawCheck 0.4s ease-out 0.7s forwards;
+    }
+
+    @keyframes drawCheck {
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    h1 {
+        color: var(--dark-charcoal);
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 14px;
+        letter-spacing: -0.02em;
+        opacity: 0;
+        animation: fadeUp 0.6s ease-out 0.9s forwards;
+    }
+
+    p {
+        color: var(--grey);
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        opacity: 0;
+        animation: fadeUp 0.6s ease-out 1.05s forwards;
+    }
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .btn {
+        display: inline-block;
+        background: var(--primary-green);
+        color: var(--white);
+        text-decoration: none;
+        font-weight: 700;
+        padding: 14px 32px;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: background 0.2s ease, transform 0.2s ease;
+        opacity: 0;
+        animation: fadeUp 0.6s ease-out 1.2s forwards;
+    }
+
+    .btn:hover {
+        background: var(--dark-charcoal);
+        transform: translateY(-2px);
+    }
+
+    .redirect-note {
+        margin-top: 20px;
+        font-size: 13px;
+        color: #A0A8B5;
+        opacity: 0;
+        animation: fadeUp 0.6s ease-out 1.3s forwards;
+    }
+
+    /* Confetti */
+    .confetti {
+        position: fixed;
+        top: -10px;
+        width: 8px;
+        height: 14px;
+        opacity: 0.9;
+        animation: fall linear forwards;
+        z-index: 5;
+    }
+
+    @keyframes fall {
+        to {
+            transform: translateY(110vh) rotate(720deg);
+            opacity: 0.3;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="card">
+    <div class="check-wrapper">
+        <div class="check-circle">
+            <svg class="checkmark" viewBox="0 0 24 24">
+                <path d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+    </div>
+    <h1>Assessment Request Received!</h1>
+    <p>Our perimeter defense consultants have your details and will reach out shortly to schedule your security audit.</p>
+    <a href="/index.html" class="btn">Return to Home Page</a>
+    <div class="redirect-note">Redirecting automatically in <span id="countdown">5</span> seconds&hellip;</div>
+</div>
+
+<script>
+    // Confetti burst
+    const colors = ['#27AE46', '#2F3542', '#6B7280', '#F5F7FA', '#FFFFFF'];
+    const confettiCount = 60;
+
+    for (let i = 0; i < confettiCount; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+        piece.style.animationDelay = (Math.random() * 0.5) + 's';
+        piece.style.width = (6 + Math.random() * 6) + 'px';
+        piece.style.height = (10 + Math.random() * 8) + 'px';
+        document.body.appendChild(piece);
+    }
+
+    // Auto-redirect countdown
+    let secondsLeft = 5;
+    const countdownEl = document.getElementById('countdown');
+    const timer = setInterval(() => {
+        secondsLeft -= 1;
+        if (secondsLeft <= 0) {
+            clearInterval(timer);
+            window.location.href = '/index.html';
+        } else {
+            countdownEl.textContent = secondsLeft;
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>

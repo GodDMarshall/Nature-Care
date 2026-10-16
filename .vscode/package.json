@@ -1,0 +1,14 @@
+{
+  "name": "naturecare-website",
+  "version": "1.0.0",
+  "description": "Nature Care perimeter security company website with assessment request form backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.13",
+    "dotenv": "^16.4.5"
+  }
+}

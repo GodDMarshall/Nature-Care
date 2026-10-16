@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Secrets — keep credentials out of git
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.vs/
+.DS_Store
+Thumbs.db
+*.log

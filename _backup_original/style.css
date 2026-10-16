@@ -1,0 +1,924 @@
+/* ==========================================================================
+   NATURE CARE — CLIENT PALETTE STYLESHEET (v5)
+
+   DESIGN SYSTEM — Client-specified palette from Coolors:
+   - Ocean Deep     #05668D  (primary dark — headers, primary elements)
+   - Steel Blue     #427AA1  (secondary — cards, links, accents)
+   - Ice White      #EBF2FA  (light text, light surface tints)
+   - Grass Green    #679436  (brand action — CTAs, active states)
+   - Charge Yellow  #A5BE00  (highlight — voltage pulse, stats, glow)
+
+   Background strategy: deep navy-blue-green (#03303F) as the page base,
+   layering the 5 palette colors across sections. No pure white anywhere.
+   ========================================================================== */
+
+/* 1. ROOT VARIABLES */
+:root {
+    --primary-green: #495057;
+    --charge-bright: #ADB5BD;
+    --ocean-deep: #212529;
+    --steel-blue: #343A40;
+    --ice-white: #F8F9FA;
+    --dark-charcoal: #343A40;
+    --deep-field: #212529;
+    --forest-mid: #2B3035;
+    --forest-line: #343A40;
+    --slate-lift: #3D4349;
+    --grey: #6C757D;
+    --mist: #DEE2E6;
+    --light-grey: #2B3035;
+    --white: #F8F9FA;
+    --black: #000000;
+    --gold: #ADB5BD;
+
+    --font-heading: 'Inter', 'Montserrat', sans-serif;
+    --font-body: 'Roboto', 'Open Sans', sans-serif;
+}
+
+/* 2. RESET & BASE TYPE */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--mist);
+    background-color: var(--deep-field);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    color: var(--white);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* 3. ANIMATION ENGINES */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes activePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4); }
+    70%  { box-shadow: 0 0 0 12px rgba(39, 174, 70, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(39, 174, 70, 0); }
+}
+
+@keyframes voltageTravel {
+    0%   { left: -10%; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { left: 110%; opacity: 0; }
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 4. SIGNATURE ELEMENT: VOLTAGE DIVIDER
+   A thin glowing line that sits between major sections, with a bright
+   pulse that travels across it once the divider enters view — current
+   running the length of a fence wire. */
+.voltage-divider {
+    position: relative;
+    height: 3px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(39,174,70,0.35), transparent);
+    overflow: hidden;
+}
+
+.voltage-divider::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -10%;
+    width: 14%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--charge-bright), transparent);
+    filter: blur(0.5px);
+    opacity: 0;
+}
+
+.voltage-divider.is-visible::after {
+    animation: voltageTravel 1.6s ease-in-out 1;
+}
+
+/* 5. HEADER & NAVIGATION */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--deep-field);
+    border-bottom: 1px solid var(--forest-line);
+    padding: 18px 5%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo-link {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.logo-img {
+    height: 140px;
+    width: auto;
+    display: block;
+}
+
+header nav ul {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin: 0;
+    list-style: none;
+}
+
+header nav a {
+    text-decoration: none;
+    color: var(--mist);
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.2s ease;
+}
+
+header nav a:hover,
+header nav a:focus {
+    color: var(--charge-bright);
+    outline: none;
+}
+
+header nav a.nav-cta {
+    background-color: var(--primary-green);
+    color: var(--white);
+    padding: 10px 22px;
+    border-radius: 4px;
+    font-size: 15px;
+}
+
+header nav a.nav-cta:hover,
+header nav a.nav-cta:focus {
+    background-color: var(--dark-charcoal);
+    color: var(--white);
+}
+
+/* 5b. SCROLL-ZOOM PHOTO HERO (Homepage only)
+   A single real photo that smoothly scales/pans as the user scrolls,
+   simulating a camera push-in toward the fence line.
+
+   Structure: #zoom-hero-wrapper is a normal-flow box with real height
+   (180vh) that reserves the scroll distance. .zoom-hero sits inside it,
+   pinned via sticky positioning, so it stays visually fixed while the
+   wrapper's extra height scrolls past underneath it. Once the wrapper
+   ends, the next section begins immediately in normal flow — no overlap. */
+#zoom-hero-wrapper {
+    position: relative;
+    height: 200vh;
+}
+
+.zoom-hero {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    color: var(--white);
+    padding: 0 10%;
+    z-index: 0;
+}
+
+.zoom-hero-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 60%;
+    transform: scale(1);
+    transform-origin: 64% 58%; /* roughly over the glowing fence in the source photo */
+    will-change: transform;
+    z-index: 0;
+}
+
+.zoom-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13,15,18,0.45) 0%, rgba(13,15,18,0.7) 100%);
+    z-index: 1;
+}
+
+.zoom-hero .hero-content {
+    position: relative;
+    z-index: 3;
+    max-width: 760px;
+}
+
+.zoom-hero h1 {
+    color: var(--white);
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.1;
+    animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.zoom-hero p {
+    margin-top: 22px;
+    margin-bottom: 36px;
+    max-width: 620px;
+    font-size: 19px;
+    color: rgba(255,255,255,0.92);
+    animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.zoom-hero .hero-actions {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+/* 6. PARALLAX HERO SYSTEM
+   Three-layer depth: background image (slowest), gradient/scrim (fixed),
+   foreground text (normal scroll speed). Works on secondary-page heroes
+   (.hero-container) on about/industries/projects/solution pages. */
+.parallax-hero {
+    position: relative;
+    height: 78vh;
+    min-height: 480px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    color: var(--white);
+    padding: 0 10%;
+}
+
+.parallax-hero .parallax-bg {
+    position: absolute;
+    top: -15%;
+    left: 0;
+    width: 100%;
+    height: 130%;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+    z-index: 0;
+}
+
+.parallax-hero .parallax-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13,15,18,0.55) 0%, rgba(13,15,18,0.75) 100%);
+    z-index: 1;
+}
+
+.parallax-hero .hero-content {
+    position: relative;
+    z-index: 3;
+    max-width: 760px;
+}
+
+/* Canvas layer for the live voltage/sensor-network graphic.
+   Sits above the image+scrim but below the text content. */
+.voltage-network-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Animated count-up stat numbers */
+[data-count-to] {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+}
+
+.parallax-hero h1 {
+    color: var(--white);
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 1.1;
+    animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.parallax-hero p {
+    margin-top: 22px;
+    margin-bottom: 36px;
+    max-width: 620px;
+    font-size: 19px;
+    color: rgba(255,255,255,0.92);
+    animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.parallax-hero .hero-actions {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+/* 7. FULL-BLEED IMAGE BAND
+   Large image sections used between content blocks for "more imagery" -
+   each band parallax-scrolls slightly slower than the page. */
+.image-band {
+    position: relative;
+    height: 55vh;
+    min-height: 340px;
+    overflow: hidden;
+}
+
+.image-band .parallax-bg {
+    position: absolute;
+    top: -15%;
+    left: 0;
+    width: 100%;
+    height: 130%;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+}
+
+.image-band .band-caption {
+    position: absolute;
+    bottom: 24px;
+    left: 6%;
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: rgba(13,15,18,0.55);
+    padding: 8px 16px;
+    border-radius: 3px;
+}
+
+/* 8. SECTIONS & LAYOUT LANDMARKS */
+section {
+    padding: 90px 10%;
+}
+
+section:nth-of-type(even):not(.no-alt-bg) {
+    background-color: var(--light-grey);
+}
+
+section[aria-labelledby="projects-heading"],
+footer {
+    background-color: var(--deep-field) !important;
+    color: var(--white);
+}
+
+section[aria-labelledby="projects-heading"] h2,
+section[aria-labelledby="projects-heading"] h3,
+section[aria-labelledby="projects-heading"] h4 {
+    color: var(--white);
+}
+
+section[id="assessment"] {
+    background-color: var(--primary-green);
+    color: var(--white);
+}
+
+section[id="assessment"] h2 {
+    color: var(--white);
+}
+
+.eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--primary-green);
+    margin-bottom: 14px;
+}
+
+/* 9. CARD GRIDS */
+ul, ol {
+    list-style: none;
+}
+
+section[aria-labelledby="industries-heading"] ul,
+section[aria-labelledby="solutions-heading"] ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+section[aria-labelledby="industries-heading"] li,
+section[aria-labelledby="solutions-heading"] li {
+    flex: 1 1 calc(33.333% - 30px);
+    background: var(--forest-mid);
+    padding: 32px;
+    border-radius: 6px;
+    border: 1px solid var(--forest-line);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+section[aria-labelledby="industries-heading"] li p,
+section[aria-labelledby="solutions-heading"] li p {
+    color: var(--mist);
+}
+
+section[aria-labelledby="industries-heading"] li:hover,
+section[aria-labelledby="solutions-heading"] li:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.35);
+    border-color: rgba(61, 220, 111, 0.4);
+}
+
+.industries-grid, .solutions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.industries-grid article, .solutions-grid article {
+    background: var(--forest-mid);
+    padding: 34px;
+    border-radius: 6px;
+    border: 1px solid var(--forest-line);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.industries-grid article p, .solutions-grid article p {
+    color: var(--mist);
+}
+
+.industries-grid article:hover, .solutions-grid article:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.35);
+}
+
+.industries-grid article img, .solutions-grid article img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+/* 10. UTILITY PANEL & SPECS TABLE */
+.utility-panel {
+    flex: 1 1 100% !important;
+    background-color: var(--forest-mid);
+    border-left: 6px solid var(--charge-bright) !important;
+    padding: 40px !important;
+    margin-bottom: 30px;
+}
+
+.utility-panel h3 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.specs-wrapper {
+    margin-top: 30px;
+    background-color: var(--deep-field);
+    padding: 25px;
+    border-radius: 4px;
+    border: 1px solid var(--forest-line);
+}
+
+.specs-wrapper h4 {
+    font-size: 16px;
+    text-transform: uppercase;
+    color: var(--charge-bright);
+    margin-bottom: 15px;
+    letter-spacing: 0.05em;
+}
+
+.specs-table, .compliance-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    text-align: left;
+}
+
+.specs-table caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.specs-table th, .specs-table td,
+.compliance-table th, .compliance-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--forest-line);
+}
+
+.specs-table tbody th {
+    font-weight: 700;
+    color: var(--white);
+    width: 35%;
+}
+
+.specs-table tbody td {
+    color: var(--mist);
+}
+
+.specs-table tbody tr:nth-child(even),
+.compliance-table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.compliance-table thead th {
+    background-color: var(--forest-line);
+    color: var(--white);
+}
+
+.compliance-table tbody td {
+    color: var(--mist);
+}
+
+/* 11. METRICS / PROJECTS GRIDS */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.metric-card {
+    background: var(--forest-mid);
+    padding: 40px 20px;
+    border-radius: 6px;
+    border: 1px solid var(--forest-line);
+}
+
+.metric-card p {
+    color: var(--mist);
+}
+
+.metric-card strong {
+    display: block;
+    font-size: 2.6rem;
+    color: var(--charge-bright);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.projects-list article {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 36px;
+    margin-bottom: 30px;
+}
+
+.projects-list article img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 24px;
+}
+
+.projects-list blockquote {
+    border-left: 3px solid var(--primary-green);
+    padding-left: 20px;
+    margin-top: 16px;
+    color: rgba(255,255,255,0.85);
+}
+
+/* 12. FORM FIELDS */
+form {
+    max-width: 800px;
+    margin-top: 40px;
+}
+
+form div {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+}
+
+input, select {
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background-color: var(--white);
+    color: var(--dark-charcoal);
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--dark-charcoal);
+    box-shadow: 0 0 0 4px rgba(47, 53, 66, 0.25);
+}
+
+/* 13. BUTTONS & LINKS */
+a.btn-primary, button[type="submit"] {
+    display: inline-block;
+    background-color: var(--primary-green);
+    color: var(--white);
+    padding: 16px 32px;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+a.btn-primary:hover, button[type="submit"]:hover {
+    background-color: var(--dark-charcoal);
+    transform: translateY(-2px);
+}
+
+button[type="submit"] {
+    animation: activePulse 2s infinite;
+}
+
+section[id="assessment"] button[type="submit"] {
+    background-color: var(--dark-charcoal);
+}
+
+a.btn-secondary {
+    display: inline-block;
+    background-color: transparent;
+    color: var(--white);
+    padding: 16px 32px;
+    text-decoration: none;
+    font-weight: 700;
+    border: 2px solid var(--white);
+    border-radius: 4px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+a.btn-secondary:hover {
+    background-color: rgba(255,255,255,0.12);
+    transform: translateY(-2px);
+}
+
+/* 14. ACCESSIBILITY */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+a:focus-visible, button:focus-visible {
+    outline: 3px solid var(--primary-green);
+    outline-offset: 2px;
+}
+
+/* 15. RESPONSIVE */
+@media (max-width: 900px) {
+    .industries-grid, .solutions-grid, .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    section[aria-labelledby="industries-heading"] li,
+    section[aria-labelledby="solutions-heading"] li {
+        flex: 1 1 100%;
+    }
+    header {
+        flex-direction: column;
+        gap: 14px;
+    }
+    header nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+    }
+    .parallax-hero {
+        height: 70vh;
+        padding: 0 6%;
+    }
+}
+/* ===== PRODUCT CATALOGUE COMPONENTS ===== */
+
+/* 3-column product grid */
+.product-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+}
+
+@media (max-width: 900px) {
+    .product-grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 560px) {
+    .product-grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Product card */
+.product-card {
+    background: var(--forest-mid);
+    border: 1px solid var(--forest-line);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    border-color: var(--primary-green);
+}
+
+.product-card-body {
+    padding: 20px;
+}
+
+.product-card-body h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+    margin-top: 6px;
+}
+
+.product-card-body p {
+    font-size: 14px;
+    color: var(--mist);
+    line-height: 1.5;
+}
+
+.product-model {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--charge-bright);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+/* Placeholder image boxes */
+.product-img-placeholder {
+    background: var(--forest-line);
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--grey);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--forest-line);
+    position: relative;
+}
+
+.product-img-placeholder::after {
+    content: '[ Photo ]';
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 10px;
+    color: var(--grey);
+    opacity: 0.5;
+    letter-spacing: 0.06em;
+}
+
+.product-img-placeholder.small {
+    height: 110px;
+    font-size: 12px;
+}
+
+/* Solutions grid placeholder images */
+.solutions-grid .product-img-placeholder {
+    height: 180px;
+    border-radius: 6px;
+    margin-bottom: 18px;
+}
+
+/* Product specs list inside cards */
+.product-specs {
+    list-style: none;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.product-specs li {
+    font-size: 13px;
+    color: var(--mist);
+    padding-left: 14px;
+    position: relative;
+}
+
+.product-specs li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--charge-bright);
+}
+
+/* Power source note */
+.product-note {
+    margin-top: 30px;
+    padding: 18px 22px;
+    background: var(--forest-mid);
+    border-left: 3px solid var(--charge-bright);
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    color: var(--mist);
+    line-height: 1.6;
+}
+
+.product-note strong {
+    color: var(--white);
+}
+
+/* Client cards grid */
+.clients-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 36px;
+}
+
+@media (max-width: 760px) {
+    .clients-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.client-card {
+    background: var(--forest-mid);
+    border: 1px solid var(--forest-line);
+    border-radius: 6px;
+    padding: 16px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mist);
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.client-card:hover {
+    border-color: var(--primary-green);
+    color: var(--white);
+}
