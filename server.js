@@ -2,6 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const nodemailer = require('nodemailer');
 
 const app = express();
@@ -12,10 +13,23 @@ const PORT = process.env.PORT || 8080;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Serve static assets (HTML, CSS, JS, and image folders) directly from the project root
-app.use(express.static(__dirname));
-app.use('/image', express.static(path.join(__dirname, 'image')));
-app.use('/images', express.static(path.join(__dirname, 'images')));
+// Serve only the public parts of the site. The project folder also holds
+// server.js, package.json, README.md and .env, which must never be downloadable,
+// so we list exactly what visitors may fetch instead of exposing the whole folder.
+const PUBLIC_DIRS = ['image', 'js', 'vendor', 'fonts'];
+PUBLIC_DIRS.forEach((dir) => {
+    app.use('/' + dir, express.static(path.join(__dirname, dir)));
+});
+
+// Top-level pages and the stylesheet. Any new *.html page added to the project
+// folder is picked up automatically on the next restart.
+const PUBLIC_FILES = new Set(
+    fs.readdirSync(__dirname).filter((f) => f.endsWith('.html')).concat(['style.css'])
+);
+app.get('/:file', (req, res, next) => {
+    if (!PUBLIC_FILES.has(req.params.file)) return next();
+    res.sendFile(path.join(__dirname, req.params.file));
+});
 
 // 3. Email Transporter Configuration (Nodemailer)
 // Credentials are pulled from environment variables (.env file locally,
@@ -98,6 +112,11 @@ app.post('/submit-assessment', (req, res) => {
 // 5. Fallback Default Route to Serve Your Existing Homepage
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Anything else is not part of the site
+app.use((req, res) => {
+    res.status(404).send('Page not found');
 });
 
 // 6. Launch & Initialize the Web Server Framework
